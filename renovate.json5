@@ -1,0 +1,34 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:recommended",
+    // https://docs.renovatebot.com/presets-default/#separatemultiplemajorreleases
+    ":separateMultipleMajorReleases",
+    // set timezone to local one to ensure schedules are run
+    // https://docs.renovatebot.com/configuration-options/#timezone
+    ":timezone(America/Toronto)",
+    // enable updates for pre-commit
+    // https://docs.renovatebot.com/modules/manager/pre-commit/
+    // https://docs.renovatebot.com/presets-default/#enableprecommit
+    ":enablePreCommit",
+    "github>mschoettle/renovate-presets//presets/docker-alpine.json5",
+  ],
+  // https://docs.renovatebot.com/configuration-options/#assignees
+  "assignees": ["mschoettle"],
+  // https://docs.renovatebot.com/configuration-options/#labels
+  "labels": ["dependencies"],
+  // Only rebase existing MRs when the branch is conflicted
+  // This avoids getting spammed by updates to existing MRs
+  // We need to rebase branches to fast-forward merge anyway
+  //
+  // https://docs.renovatebot.com/configuration-options/#rebasewhen
+  "rebaseWhen": "conflicted",
+  "docker-compose": {
+    "fileMatch": [
+      // default: https://docs.renovatebot.com/modules/manager/docker-compose/#default-config
+      "(^|/)(?:docker-)?compose[^/]*\\.ya?ml$",
+      // also detect jinja compose files
+      "(^|/)(?:docker-)?compose[^/]*\\.ya?ml\\.jinja$",
+    ],
+  },
+}

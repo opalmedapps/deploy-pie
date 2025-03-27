@@ -1,0 +1,10 @@
+tmp/
+generated/
+
+certs/*
+config/firebase/
+artifacts/
+
+compose.override.yaml
+
+__pycache__

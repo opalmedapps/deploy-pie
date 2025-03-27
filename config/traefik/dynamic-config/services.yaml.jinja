@@ -1,0 +1,98 @@
+http:
+  # https://doc.traefik.io/traefik/routing/routers/
+  routers:
+    labs:
+      {# escape curly braces for Jinja #}
+      rule: {% raw %}'Host(`{{ env "APP_HOST" }}`) && PathPrefix(`/opal-labs`)'{% endraw %}
+      entryPoints:
+        - web-secure
+      middlewares:
+        - redirect-missing-slash
+        - labs-stripprefix
+        - labs-auth
+      service: labs
+      tls: {}
+
+    opaladmin:
+      rule: {% raw %}'Host(`{{ env "APP_HOST" }}`) && PathPrefix(`/opalAdmin`)'{% endraw %}
+      entryPoints:
+        - web-secure
+      middlewares:
+        - redirect-missing-slash
+        - opaladmin-stripprefix
+      service: opaladmin
+      tls: {}
+
+    backend:
+      rule: {% raw %}'Host(`{{ env "APP_HOST" }}`)'{% endraw %}
+      middlewares:
+        - redirect-root
+      entryPoints:
+        - web-secure
+      service: backend
+      {% if certificate_type == "letsencrypt" -%}
+      tls:
+        certResolver: letsencrypt
+      {% else %}
+      tls: {}
+      {%- endif %}
+
+    backend-media:
+      rule: {% raw %}'Host(`{{ env "APP_HOST" }}`) && PathPrefix(`/media/uploads/`)'{% endraw %}
+      entryPoints:
+        - web-secure
+      service: backend-media
+      tls: {}
+
+  middlewares:
+    redirect-root:
+      redirectRegex:
+        regex: {% raw %}"^https://([^/]+)/?$"{% endraw %}
+        replacement: "https://${1}/opalAdmin/"
+        permanent: false
+    redirect-missing-slash:
+      # https://doc.traefik.io/traefik/middlewares/http/redirectregex/
+      redirectRegex:
+        regex: {% raw %}'^https://({{ env "APP_HOST" }}/[A-Za-z\\-]*$)'{% endraw %}
+        replacement: "https://$1/"
+        permanent: false
+
+    labs-stripprefix:
+      # https://doc.traefik.io/traefik/middlewares/http/stripprefix/
+      stripPrefix:
+        prefixes:
+          - "/opal-labs"
+
+    labs-auth:
+      # https://doc.traefik.io/traefik/middlewares/http/basicauth/
+      basicAuth:
+        users:
+          - {% raw %}'{{ env "AUTH_LABS_USERNAME"}}:{{ env "AUTH_LABS_PASSWORD" }}'{% endraw %}
+
+    opaladmin-stripprefix:
+      # # https://doc.traefik.io/traefik/middlewares/http/stripprefix/
+      stripPrefix:
+        prefixes:
+          - "/opalAdmin"
+
+  # https://doc.traefik.io/traefik/routing/services/
+  services:
+    labs:
+      loadBalancer:
+        servers:
+          - url: http://labs:8080
+
+    opaladmin:
+      loadBalancer:
+        servers:
+          - url: http://opaladmin:8080
+
+    backend:
+      loadBalancer:
+        servers:
+          - url: http://backend:8000
+
+    backend-media:
+      loadBalancer:
+        servers:
+          - url: http://backend-media:80

@@ -1,0 +1,8 @@
+services:
+  adminer:
+    image: adminer:5.0.6-standalone
+    restart: unless-stopped
+    environment:
+      - TZ=${TIMEZONE}
+    ports:
+      - "8090:8080"

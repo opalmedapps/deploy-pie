@@ -1,0 +1,68 @@
+services:
+  ofelia:
+    image: mcuadros/ofelia:0.3.16
+    command: daemon --docker --docker-filter label=com.docker.compose.project=${ENVIRONMENT}
+    depends_on:
+      - backend
+      - opaladmin
+    environment:
+      - TZ=${TIMEZONE}
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - $PWD/artifacts/logs/ofelia:/logs/ofelia
+    labels:
+      - "ofelia.smtp-host=${CRON_SMTP_HOST}"
+      - "ofelia.smtp-port=${CRON_SMTP_PORT}"
+      - "ofelia.email-to=${CRON_EMAIL_TO}"
+      - "ofelia.email-from=${CRON_EMAIL_FROM}"
+      - "ofelia.mail-only-on-error=${CRON_EMAIL_ONLY_ON_ERROR}"
+      - "ofelia.save-folder=/logs/ofelia/"
+      - "ofelia.save-only-on-error=true"
+  opaladmin:
+    labels:
+      - "ofelia.enabled=true"
+      - "ofelia.job-exec.data-control.schedule=* */2 * * * *"
+      - "ofelia.job-exec.data-control.command=/var/www/html/publisher/dataControl.pl"
+      - "ofelia.job-exec.data-control.no-overlap=true"
+      - "ofelia.job-exec.announcements.schedule=0 * * * * *"
+      - "ofelia.job-exec.announcements.command=/var/www/html/publisher/controls/announcementControl.pl"
+      - "ofelia.job-exec.announcements.no-overlap=true"
+      - "ofelia.job-exec.educational-material.schedule=0 */2 * * * *"
+      - "ofelia.job-exec.educational-material.command=/var/www/html/publisher/controls/educationalMaterialControl.pl"
+      - "ofelia.job-exec.educational-material.no-overlap=true"
+      - "ofelia.job-exec.questionnaires.schedule=0 */2 * * * *"
+      - "ofelia.job-exec.questionnaires.command=/var/www/html/publisher/controls/legacyQuestionnaireControl.pl"
+      - "ofelia.job-exec.questionnaires.no-overlap=true"
+      - "ofelia.job-exec.treating-team-messages.schedule=0 */2 * * * *"
+      - "ofelia.job-exec.treating-team-messages.command=/var/www/html/publisher/controls/txTeamMessagesControl.pl"
+      - "ofelia.job-exec.treatment-team-messages.no-overlap=true"
+      - "ofelia.job-exec.pending-resources.schedule=0 * * * * *"
+      - "ofelia.job-exec.pending-resources.command=curl --silent --show-error http://localhost:8080/cron-job/update/resource-pending"
+      - "ofelia.job-exec.pending-resources.no-overlap=true"
+      - "ofelia.job-exec.pending-appointments.schedule=0 * * * * *"
+      - "ofelia.job-exec.pending-appointments.command=curl --silent --show-error http://localhost:8080/cron-job/update/appointment-pending"
+      - "ofelia.job-exec.pending-appointments.no-overlap=true"
+      - "ofelia.job-exec.audit-backup.schedule=0 30 0 * * *"
+      - "ofelia.job-exec.audit-backup.command=curl --silent --show-error http://localhost:8080/cron-job/add.audit.system.backup.php"
+      - "ofelia.job-exec.appointment-reminder.schedule=0 0 14 * * *"
+      - "ofelia.job-exec.appointment-reminder.command=php /var/www/html/publisher/php/sendAppointmentReminders.php"
+      - "ofelia.job-exec.delayed-labs.schedule=0 0 */2 * * *"
+      - "ofelia.job-exec.delayed-labs.command=php /var/www/html/publisher/php/sendDelayedLabsPushNotifications.php"
+  backend:
+    labels:
+      - "ofelia.enabled=true"
+      # Run the Patient records deviations check daily at 2am
+      - "ofelia.job-exec.deviations.schedule=0 0 2 * * *"
+      - "ofelia.job-exec.deviations.command=python manage.py find_deviations"
+      # Run the Questionnaire respondents sync check daily at 2am
+      - "ofelia.job-exec.deviations-questionnaires.schedule=0 0 2 * * *"
+      - "ofelia.job-exec.deviations-questionnaires.command=python manage.py find_questionnaire_respondent_deviations"
+      # Expire outdated registration codes check every hour
+      - "ofelia.job-exec.expire-registrations.schedule=0 0 * * * *"
+      - "ofelia.job-exec.expire-registrations.command=python manage.py expire_outdated_registration_codes"
+      # Mark relationships as expired daily at midnight + 1 min (shortly after people's age changes)
+      - "ofelia.job-exec.expire-relationships.schedule=0 1 0 * * *"
+      - "ofelia.job-exec.expire-relationships.command=python manage.py expire_relationships"
+      # Update application usage statics daily at 5am
+      - "ofelia.job-exec.usage-statistics.schedule=0 0 5 * * *"
+      - "ofelia.job-exec.usage-statistics.command=python manage.py update_daily_usage_statistics"

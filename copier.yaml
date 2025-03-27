@@ -1,0 +1,298 @@
+run_setup:
+  # computed value to determine whether to prompt the setup questions
+  type: bool
+  default: "{{ performed_copy is not defined or performed_copy is false }}"
+  when: false
+
+project_name:
+  type: str
+  help: What is your project name?
+  default: Deploy App
+
+project_slug:
+  type: str
+  help: What is your project slug?
+  default: "{{ project_name | slugify }}"
+  when: false
+
+extra_files:
+  type: str
+  help: Where are the extra files located (absolute path)?
+  validator: |
+    {% if extra_files | length < 1 %}Required{% endif %}
+    {% if not is_directory(extra_files) %}Not a directory{% endif %}
+    {% if not is_absolute(extra_files) %}Please provide an absolute path{% endif %}
+
+environment:
+  type: str
+  help: The name of the environment you are deploying
+  default: production
+
+timezone:
+  type: str
+  help: Which timezone is this running in? A valid TZ identifier must be used
+  default: America/Toronto
+  validator: "{% if not timezone | valid_timezone %}A valid TZ identifier is required, see: https://en.wikipedia.org/wiki/List_of_tz_database_time_zones{% endif %}"
+
+domain:
+  type: str
+  help: Which domain is this going to be available at?
+  default: localhost
+
+certificate_type:
+  type: str
+  help: How do you want to deal with the server certificate?
+  choices:
+    Let's Encrypt: letsencrypt
+    Certificate files: file
+
+admin_email:
+  type: str
+  help: Email address to provide to Let's Encrypt
+  when: "{{ certificate_type == 'letsencrypt' }}"
+  validator: "{% if admin_email | length < 1 %}Required{% endif %}"
+
+http_port:
+  type: int
+  help: HTTP port the reverse proxy is listening at (redirects to https)
+  default: 80
+
+https_port:
+  type: int
+  help: HTTPS port the reverse proxy is listening at
+  default: 443
+
+db_host_type:
+  type: str
+  help: Where do you want to run the DB server?
+  choices:
+    - [in a container, container]
+    - [on the same server, same_server]
+    - [on a different server, separate_server]
+
+db_host:
+  type: str
+  help: What's the hostname of the DB server?
+  default: |-
+    {%- if db_host_type == "container" -%}
+      db
+    {%- elif db_host_type == "same_server" -%}
+      host.docker.internal
+    {%- else -%}
+      {#- Force the user to type a host -#}
+
+    {%- endif -%}
+  when: "{{ db_host_type == 'separate_server' }}"
+  validator: "{% if db_host | length < 1 %}Required{% endif %}"
+
+db_port:
+  type: int
+  help: Port the DB server is listening at
+  when: "{{ db_host_type != 'container' }}"
+  default: 3306
+
+db_user:
+  type: str
+  help: Username of the database user
+  default: opal
+  when: "{{ run_setup }}"
+
+db_password:
+  type: str
+  help: Password of the database user (leave as is for generated one)
+  # secret: true
+  default: "{% if run_setup %}{{ random_password(20) }}{% else %}{{ existing_secret('.env', 'DB_PASSWORD') }}{% endif %}"
+  when: false
+
+db_root_user:
+  type: str
+  help: Username of a database root user (to create user and databases)
+  default: root
+  when: "{{ db_host_type != 'container'}}"
+  validator: "{% if db_root_user | length < 1 %}Required{% endif %}"
+
+db_root_password:
+  type: str
+  help: Password of the database root user
+  secret: true
+  default: |-
+    {% if db_host_type == "container" -%}
+      {% if run_setup %}{{ random_password(32) }}{% else %}{{ existing_secret('.env', 'DB_ROOT_PASSWORD') }}{% endif %}
+    {%- else -%}
+      {#- Force the user to type a password -#}
+
+    {%- endif %}
+  validator: "{% if db_root_password | length < 1 %}Required{% endif %}"
+  when: "{{ db_host_type != 'container'}}"
+
+db_use_tls:
+  type: bool
+  help: Connect to the DB server via TLS?
+  default: "{% if db_host_type == 'separate_server' %}true{% else %}false{% endif %}"
+  when: "{{ db_host_type == 'separate_server' }}"
+
+use_custom_certs:
+  type: bool
+  help: Do you need to use a custom CA file to verify HTTPS and DB connections?
+  default: false
+  when: "{{ certificate_type == 'file' or db_use_tls }}"
+
+use_ofelia:
+  type: bool
+  help: Do you want to use Ofelia as a job scheduler to run period jobs?
+  default: true
+
+firebase_project_name:
+  type: str
+  help: The Firebase project name
+  validator: "{% if firebase_project_name | length < 1 %}Required{% endif %}"
+
+institution_code:
+  type: str
+  help: The 2 character unique institution code
+  default: o4
+  validator: "{% if institution_code | length != 2 %}Must be exactly two characters{% endif %}"
+
+app_id:
+  type: str
+  help: The app ID of the iOS app
+  validator: "{% if app_id | length < 1 %}Required{% endif %}"
+
+clinical_notes_path:
+  type: str
+  help: Path to the directory containing clinical notes (leave empty to use predetermined one)
+  default: $PWD/artifacts/clinical-notes
+  validator: "{% if clinical_notes_path | length < 1 %}Required{% endif %}"
+
+domain_registration:
+  type: str
+  help: What domain is the registration website deployed at?
+  validator: "{% if domain_registration | length < 1 %}Required{% endif %}"
+
+listener_token:
+  type: str
+  default: "{% if run_setup %}{{ random_token(20) }}{% else %}{{ existing_secret('.envs/listener.env', 'BACKEND_LISTENER_AUTH_TOKEN') }}{% endif %}"
+  when: false
+
+listener_registration_token:
+  type: str
+  default: "{% if run_setup %}{{ random_token(20) }}{% else %}{{ existing_secret('.envs/listener.env', 'BACKEND_REGISTRATION_AUTH_TOKEN') }}{% endif %}"
+  when: false
+
+interface_engine_token:
+  type: str
+  default: "{% if run_setup %}{{ random_token(20) }}{% endif %}"
+  when: false
+
+opaladmin_token:
+  type: str
+  default: "{% if run_setup %}{{ random_token(20) }}{% else %}{{ existing_secret('.envs/opaladmin.env', 'NEW_OPALADMIN_TOKEN') }}{% endif %}"
+  when: false
+
+admin_password:
+  type: str
+  default: "{% if run_setup %}{{ random_token(32) }}{% endif %}"
+  when: false
+
+labs_password:
+  type: str
+  default: "{% if run_setup %}{{ random_token(20) }}{% endif %}"
+  when: false
+
+_message_after_copy: |
+  Your project "{{ project_name }}" has been created successfully!
+
+    Next steps:
+
+    1. Change directory to the project root:
+
+       $ cd {{ _copier_conf.dst_path }}/
+
+    2. Commit the initial state to the initialized Git repository
+    3. Read "README.md".
+    4. Open OpalAdmin: https://{{ domain }}:{{ https_port }}/opalAdmin/
+    5. Log in with username "admin" and password "{{ admin_password }}"
+    6. Provide the interface engine with the following credentials for inserting lab results using HTTP basic auth:
+
+        username: interface-engine
+        password: {{ labs_password }}
+        basic auth header value: {{ "interface-engine:{}".format(labs_password) | b64encode }}
+
+    NOTE: The passwords shown above can not be retrieved again. Please add them to your password manager for future reference.
+
+_tasks:
+  - "echo Copying extra files into project directory..."
+  - python scripts/copy_file.py {{ extra_files }}/firebase-admin-key.json config/firebase/service-account.json --chmod 0644
+  - command: python scripts/copy_file.py {{ extra_files }}/db-certs.crt certs/db-certs.crt --chmod 0644
+    when: "{{ use_custom_certs }}"
+  - command: python scripts/copy_file.py {{ extra_files }}/{{ domain }}.crt certs/server.crt --chmod 0644
+    when: "{{ certificate_type != 'letsencrypt' }}"
+  - command: python scripts/copy_file.py {{ extra_files }}/{{ domain }}.key certs/server.key --chmod 0644
+    when: "{{ certificate_type != 'letsencrypt' }}"
+  # create traefik certs directory when using let's encrypt
+  # the ACME file needs 600 file mode: https://doc.traefik.io/traefik/https/acme/#storage
+  - command: |
+      mkdir -p config/traefik/certs
+      touch config/traefik/certs/acme.json
+      chmod 0600 config/traefik/certs/acme.json
+    when: "{{ certificate_type == 'letsencrypt' }}"
+  - python scripts/copy_file.py {{ extra_files }}/apn.crt certs/apn.crt --chmod 0644
+  - python scripts/copy_file.py {{ extra_files }}/apn.key certs/apn.key --chmod 0644
+  - command: python scripts/copy_file.py {{ extra_files}}/ca-certificates.crt certs/ca-certificates.crt --chmod 0644
+    when: "{{ use_custom_certs }}"
+  # create clinical notes if it is a relative directory
+  - command: mkdir -p {{ clinical_notes_path }}
+    when: "{{ not is_absolute(clinical_notes_path )}}"
+  # the clinical notes directory unfortunately needs chmod 0777 due to the different users in the container creating files
+  - command: chmod 0777 {{ clinical_notes_path }}
+  # pull latest images
+  - command: docker compose pull
+  # start the DB container if it is in a container
+  - command: |
+      docker compose up -d db
+      echo "Waiting for DB container to be ready..."
+      sleep 10
+    when: "{{ db_host_type == 'container' }}"
+  # run the backend
+  - docker compose up -d backend
+  # set up the databases
+  - command: |
+      echo "Running init_db script to initialize DB..."
+      ENVIRONMENT="{{ environment }}" DB_ROOT_USER="{{ db_root_user }}" DB_ROOT_PASSWORD="{{ db_root_password }}" DB_HOST="{{ db_host }}" DB_PORT="{{ db_port }}" DB_USER="{{ db_user }}" DB_PASSWORD="{{ db_password }}" DB_NAME=backend bash ./scripts/init_db.sh
+  # Migrate schemas and initialize data
+  - command: |
+      LISTENER_TOKEN="{{ listener_token }}" LISTENER_REGISTRATION_TOKEN="{{ listener_registration_token }}" INTERFACE_ENGINE_TOKEN="{{ interface_engine_token }}" OPALADMIN_TOKEN="{{ opaladmin_token }}" ADMIN_PASSWORD={{ admin_password }} ./scripts/initialize.sh
+  # run the remaining services
+  - command: |
+      docker compose up -d
+  # - command: git init
+
+# https://copier.readthedocs.io/en/latest/configuring/#jinja_extensions
+_jinja_extensions:
+  # https://github.com/copier-org/copier-templates-extensions/#usage
+  - copier_templates_extensions.TemplateExtensionLoader
+  - extensions/strictundefined.py:StrictUndefinedExtension
+  - extensions/slugify.py:SlugifyExtension
+  - extensions/timezone.py:TimezoneExtension
+  - extensions/secrets.py:SecretsExtension
+  - extensions/paths.py:PathsExtension
+
+# https://copier.readthedocs.io/en/latest/configuring/#exclude
+_exclude:
+  # default
+  - copier.yaml
+  - copier.yml
+  - "~*"
+  - "*.py[co]"
+  - "__pycache__"
+  - ".git"
+  - ".DS_Store"
+  - ".svn"
+  # additional
+  - ".vscode"
+  - ".editorconfig"
+  - ".gitlab-ci.yml"
+  - ".markdownlint.yaml"
+  - "renovate.json5"
+  # - "README.md"
+  - extensions

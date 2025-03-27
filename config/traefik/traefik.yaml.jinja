@@ -1,0 +1,44 @@
+global:
+  checkNewVersion: false
+  sendAnonymousUsage: false
+
+log:
+  level: INFO
+
+accessLog:
+  filePath: "/logs/access.log"
+
+# https://doc.traefik.io/traefik/routing/entrypoints/
+entryPoints:
+  web:
+    address: ":80"
+    http:
+      redirections:
+        entrypoint:
+          to: web-secure
+  web-secure:
+    address: ":443"
+    {% if certificate_type == "letsencrypt" -%}
+    http:
+      tls:
+        certResolver: letsencrypt
+    {%- endif %}
+
+providers:
+  # https://doc.traefik.io/traefik/providers/file/
+  file:
+    directory: "/config/"
+
+{% if certificate_type == "letsencrypt" -%}
+certificatesResolvers:
+  letsencrypt:
+    acme:
+      tlsChallenge: {}
+      email: {{ admin_email }}
+      storage: "/certs/acme.json"
+{%- endif %}
+
+# API and dashboard configuration
+api:
+  insecure: false
+  dashboard: true
