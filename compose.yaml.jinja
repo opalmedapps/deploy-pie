@@ -118,7 +118,7 @@ services:
         read_only: true
       {%- endif %}
   backend-media:
-    image: joseluisq/static-web-server:2.36.0
+    image: joseluisq/static-web-server:2.36.1
     restart: unless-stopped
     depends_on:
       - backend
