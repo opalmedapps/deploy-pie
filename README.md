@@ -67,8 +67,6 @@ The required software is:
 You need to be logged into the GitLab container registry.
 Follow the instructions to [authenticate with the container registry](https://docs.gitlab.com/ee/user/packages/container_registry/authenticate_with_container_registry.html).
 
-You need to have a token that has the `read_repository` scope in order for `copier` to read this repository.
-
 At the end of setting up a new project using `copier` certain files, such as certificate files,
 are copied to the project directory.
 Whether a file is required depends on the chosen deployment options.
@@ -97,7 +95,7 @@ Run the following command:
 
 ```shell
 uvx --python ">=3.12" --with copier-templates-extensions --with bcrypt \
-    copier copy --trust git+https://<username>:$TOKEN@gitlab.com/opalmedapps/infrastructure/deploy-app.git <target-directory>
+    copier copy --trust git+https://github.com/opalmedapps/deploy-pie.git <target-directory>
 ```
 
 Answer the questions that you are asked.
