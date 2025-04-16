@@ -19,11 +19,13 @@ def bcrypt_hash(value: str) -> str:
     return bcrypt.hashpw(value.encode(), bcrypt.gensalt(prefix=b'2a')).decode()
 
 
-def existing_secret(path: str, name: str) -> str:
-    with Path(path).open() as file:
-        for line in file.readlines():
-            if line.startswith(f'{name}='):
-                return line.split('=')[1].strip().removeprefix('"').removesuffix('"')
+def existing_secret(filepath: str, name: str) -> str:
+    path = Path(filepath)
+    if path.exists():
+        with path.open() as file:
+            for line in file.readlines():
+                if line.startswith(f'{name}='):
+                    return line.split('=')[1].strip().removeprefix('"').removesuffix('"')
 
     return ''
 
