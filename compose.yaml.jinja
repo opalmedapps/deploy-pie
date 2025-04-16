@@ -43,22 +43,19 @@ services:
     restart: unless-stopped
     environment:
       - MARIADB_ROOT_PASSWORD=${DB_ROOT_PASSWORD}
-      # - MARIADB_USER=${DB_USER}
-      # - MARIADB_PASSWORD=${DB_PASSWORD}
-      # - MARIADB_DATABASE=${DB_NAME}
       - TZ=${TIMEZONE}
     volumes:
       - db-data:/var/lib/mysql
   {%- endif %}
-  opaladmin:
-    image: registry.gitlab.com/opalmedapps/opaladmin:latest
+  admin-legacy:
+    image: ghcr.io/opalmedapps/opal-admin-legacy:main
     restart: unless-stopped
     {% if db_host_type == "container" -%}
     depends_on:
       - db
     {%- endif %}
     env_file:
-      - $PWD/.envs/opaladmin.env
+      - $PWD/.envs/admin-legacy.env
     environment:
       - TZ=${TIMEZONE}
     volumes:
@@ -70,7 +67,7 @@ services:
         target: /config/firebase-service-account.json
         read_only: true
       - type: bind
-        source: $PWD/artifacts/logs/opaladmin
+        source: $PWD/artifacts/logs/admin-legacy
         target: /var/www/html/publisher/logs
       - type: bind
         source: $PWD/certs/apn.crt
@@ -90,20 +87,20 @@ services:
         target: /certs/db-certs.crt
         read_only: true
       {%- endif %}
-  backend:
-    image: registry.gitlab.com/opalmedapps/backend:latest
+  admin:
+    image: ghcr.io/opalmedapps/opal-admin:main
     restart: unless-stopped
     {% if db_host_type == "container" -%}
     depends_on:
       - db
     {%- endif %}
     env_file:
-      $PWD/.envs/backend.env
+      $PWD/.envs/admin.env
     environment:
       - TZ=${TIMEZONE}
     volumes:
-      - backend-media:/app/opal/media
-      - backend-logs:/logs
+      - admin-media:/app/opal/media
+      - admin-logs:/logs
       - type: bind
         source: {{ clinical_notes_path }}
         target: ${CLINICAL_REPORTS_PATH}
@@ -117,15 +114,15 @@ services:
         target: /certs/db-certs.crt
         read_only: true
       {%- endif %}
-  backend-media:
+  admin-media:
     image: joseluisq/static-web-server:2.36.1
     restart: unless-stopped
     depends_on:
-      - backend
+      - admin
     volumes:
-      - backend-media:/public/media:ro
+      - admin-media:/public/media:ro
   listener:
-    image: registry.gitlab.com/opalmedapps/opal-listener:latest
+    image: ghcr.io/opalmedapps/opal-listener:latest
     restart: unless-stopped
     {% if db_host_type == "container" -%}
     depends_on:
@@ -155,33 +152,10 @@ services:
         read_only: true
       {%- endif %}
   redis:
-    image: redis:7.4.1-alpine3.20
+    image: redis:7.4.2-alpine3.21
     restart: unless-stopped
-  labs:
-    image: registry.gitlab.com/opalmedapps/opal-labs:latest
-    restart: unless-stopped
-    depends_on:
-      - redis
-      {% if db_host_type == "container" -%}
-      - db
-      {%- endif %}
-    env_file:
-      - $PWD/.envs/labs.env
-    environment:
-      - TZ=${TIMEZONE}
-    {% if use_custom_certs -%}
-    volumes:
-      - type: bind
-        source: $PWD/certs/ca-certificates.crt
-        target: /etc/ssl/certs/ca-certificates.crt
-        read_only: true
-      - type: bind
-        source: $PWD/certs/db-certs.crt
-        target: /certs/db-certs.crt
-        read_only: true
-    {%- endif %}
-  alembic:
-    image: registry.gitlab.com/opalmedapps/db-docker/alembic:latest
+  db-management:
+    image: ghcr.io/opalmedapps/opal-db-management:latest
     {% if db_host_type == "container" -%}
     depends_on:
       - db
@@ -189,7 +163,7 @@ services:
     environment:
       - TZ=${TIMEZONE}
     env_file:
-      - $PWD/.envs/alembic.env
+      - $PWD/.envs/db-management.env
     {% if use_custom_certs -%}
     volumes:
       - type: bind
@@ -200,8 +174,8 @@ services:
 
 volumes:
   db-data:
-  backend-media:
-  backend-logs:
+  admin-media:
+  admin-logs:
 
 networks:
   default:

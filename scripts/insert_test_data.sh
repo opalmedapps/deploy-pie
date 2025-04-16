@@ -27,20 +27,20 @@ fi
 declare -a commands=(
     "docker compose run --rm alembic ./alembic-upgrade.sh"
 
-    "docker compose exec backend python manage.py migrate"
+    "docker compose exec admin python manage.py migrate"
 
     "docker compose run --rm alembic db_management/reset_data.sh $institution"
 
-    "docker compose exec backend python manage.py initialize_data --force-delete"
-    "docker compose exec -u root backend chown -R 1003:1003 /app/opal/media/uploads"
-    "docker compose exec -u root backend chmod -R 0777 /app/opal/media/uploads"
-    "docker compose exec backend python manage.py insert_test_data $institution --force-delete"
+    "docker compose exec admin python manage.py initialize_data --force-delete"
+    "docker compose exec -u root admin chown -R 1003:1003 /app/opal/media/uploads"
+    "docker compose exec -u root admin chmod -R 0777 /app/opal/media/uploads"
+    "docker compose exec admin python manage.py insert_test_data $institution --force-delete"
 
-    "docker compose exec backend python manage.py migrate_users"
+    "docker compose exec admin python manage.py migrate_users"
 
     "docker compose exec listener node src/firebase/initialize_users.js"
 
-    "docker compose exec backend python manage.py find_deviations"
+    "docker compose exec admin python manage.py find_deviations"
 )
 
 # Execute each command

@@ -13,23 +13,23 @@ http:
       service: labs
       tls: {}
 
-    opaladmin:
+    admin-legacy:
       rule: {% raw %}'Host(`{{ env "APP_HOST" }}`) && PathPrefix(`/opalAdmin`)'{% endraw %}
       entryPoints:
         - web-secure
       middlewares:
         - redirect-missing-slash
-        - opaladmin-stripprefix
-      service: opaladmin
+        - admin-legacy-stripprefix
+      service: admin-legacy
       tls: {}
 
-    backend:
+    admin:
       rule: {% raw %}'Host(`{{ env "APP_HOST" }}`)'{% endraw %}
       middlewares:
         - redirect-root
       entryPoints:
         - web-secure
-      service: backend
+      service: admin
       {% if certificate_type == "letsencrypt" -%}
       tls:
         certResolver: letsencrypt
@@ -37,11 +37,11 @@ http:
       tls: {}
       {%- endif %}
 
-    backend-media:
+    admin-media:
       rule: {% raw %}'Host(`{{ env "APP_HOST" }}`) && PathPrefix(`/media/uploads/`)'{% endraw %}
       entryPoints:
         - web-secure
-      service: backend-media
+      service: admin-media
       tls: {}
 
   middlewares:
@@ -69,7 +69,7 @@ http:
         users:
           - {% raw %}'{{ env "AUTH_LABS_USERNAME"}}:{{ env "AUTH_LABS_PASSWORD" }}'{% endraw %}
 
-    opaladmin-stripprefix:
+    admin-legacy-stripprefix:
       # # https://doc.traefik.io/traefik/middlewares/http/stripprefix/
       stripPrefix:
         prefixes:
@@ -82,17 +82,17 @@ http:
         servers:
           - url: http://labs:8080
 
-    opaladmin:
+    admin-legacy:
       loadBalancer:
         servers:
-          - url: http://opaladmin:8080
+          - url: http://admin-legacy:8080
 
-    backend:
+    admin:
       loadBalancer:
         servers:
-          - url: http://backend:8000
+          - url: http://admin:8000
 
-    backend-media:
+    admin-media:
       loadBalancer:
         servers:
-          - url: http://backend-media:80
+          - url: http://admin-media:80

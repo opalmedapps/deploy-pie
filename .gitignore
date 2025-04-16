@@ -3,7 +3,7 @@ generated/
 
 certs/*
 config/firebase/
-artifacts/
+# artifacts/
 
 compose.override.yaml
 
