@@ -160,7 +160,7 @@ app_id:
 
 clinical_notes_path:
   type: str
-  help: Path to the directory containing clinical notes (leave empty to use predetermined one)
+  help: Path to the directory containing clinical notes (leave as is to use predetermined one)
   default: $PWD/artifacts/clinical-notes
   validator: "{% if clinical_notes_path | length < 1 %}Required{% endif %}"
 
