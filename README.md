@@ -149,12 +149,12 @@ Some questions are conditional based on your answer to a previous question.
 
     Requests received via HTTP are redirected to HTTPS.
 
-    > [!IMPORTANT]
-    > Test
 
 9. **HTTPS port the reverse proxy is listening at**
 
     The use of HTTPS is mandatory.
+
+    **Important:** `traefik` is currently set up to use the [TLS Challenge](https://doc.traefik.io/traefik/https/acme/#tlschallenge) which requires port `443` to be reachable.
 
 10. **Where do you want to run the DB server?**
 

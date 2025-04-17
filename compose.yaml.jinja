@@ -59,6 +59,7 @@ services:
     environment:
       - TZ=${TIMEZONE}
     volumes:
+      - admin-legacy-logs:/var/www/html/publisher/logs
       - type: bind
         source: {{ clinical_notes_path }}
         target: ${CLINICAL_REPORTS_PATH}
@@ -66,9 +67,6 @@ services:
         source: $PWD/config/firebase/service-account.json
         target: /config/firebase-service-account.json
         read_only: true
-      - type: bind
-        source: $PWD/artifacts/logs/admin-legacy
-        target: /var/www/html/publisher/logs
       - type: bind
         source: $PWD/certs/apn.crt
         target: /var/www/html/publisher/php/certificates/apn.crt
@@ -176,6 +174,7 @@ volumes:
   db-data:
   admin-media:
   admin-logs:
+  admin-legacy-logs:
 
 networks:
   default:

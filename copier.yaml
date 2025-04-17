@@ -61,6 +61,7 @@ https_port:
   type: int
   help: HTTPS port the reverse proxy is listening at
   default: 443
+  validator: "{% if https_port != 443 }A non-standard port is currently not supported{% endif %}"
 
 db_host_type:
   type: str
