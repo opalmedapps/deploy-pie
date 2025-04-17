@@ -255,7 +255,7 @@ _tasks:
   # set up the databases
   - command: |
       echo "Running init_db script to initialize DB..."
-      ENVIRONMENT="{{ environment }}" DB_ROOT_USER="{{ db_root_user }}" DB_ROOT_PASSWORD="{{ db_root_password }}" DB_HOST="{{ db_host }}" DB_PORT="{{ db_port }}" DB_USER="{{ db_user }}" DB_PASSWORD="{{ db_password }}" DB_NAME=backend bash ./scripts/init_db.sh
+      ENVIRONMENT="{{ environment }}" DB_ROOT_USER="{{ db_root_user }}" DB_ROOT_PASSWORD="{{ db_root_password }}" DB_HOST="{{ db_host }}" DB_PORT="{{ db_port }}" DB_USER="{{ db_user }}" DB_PASSWORD="{{ db_password }}" DB_NAME=admin bash ./scripts/init_db.sh
   # run admin
   - docker compose up -d admin
   # Migrate schemas and initialize data
