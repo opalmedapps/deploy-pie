@@ -251,14 +251,13 @@ _tasks:
   - command: |
       docker compose up -d db
       echo "Waiting for DB container to be ready..."
-      sleep 10
     when: "{{ db_host_type == 'container' }}"
-  # run admin
-  - docker compose up -d admin
   # set up the databases
   - command: |
       echo "Running init_db script to initialize DB..."
       ENVIRONMENT="{{ environment }}" DB_ROOT_USER="{{ db_root_user }}" DB_ROOT_PASSWORD="{{ db_root_password }}" DB_HOST="{{ db_host }}" DB_PORT="{{ db_port }}" DB_USER="{{ db_user }}" DB_PASSWORD="{{ db_password }}" DB_NAME=backend bash ./scripts/init_db.sh
+  # run admin
+  - docker compose up -d admin
   # Migrate schemas and initialize data
   - command: |
       LISTENER_TOKEN="{{ listener_token }}" LISTENER_REGISTRATION_TOKEN="{{ listener_registration_token }}" INTERFACE_ENGINE_TOKEN="{{ interface_engine_token }}" ADMIN_TOKEN="{{ admin_token }}" ADMIN_PASSWORD={{ admin_password }} ./scripts/initialize.sh
