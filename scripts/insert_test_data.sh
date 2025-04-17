@@ -25,11 +25,11 @@ if [[ "$institution" != "OMI" && "$institution" != "OHIGPH" ]]; then
 fi
 
 declare -a commands=(
-    "docker compose run --rm alembic ./alembic-upgrade.sh"
+    "docker compose run --rm db-management ./alembic-upgrade.sh"
 
     "docker compose exec admin python manage.py migrate"
 
-    "docker compose run --rm alembic db_management/reset_data.sh $institution"
+    "docker compose run --rm db-management db_management/reset_data.sh $institution"
 
     "docker compose exec admin python manage.py initialize_data --force-delete"
     "docker compose exec -u root admin chown -R 1003:1003 /app/opal/media/uploads"
