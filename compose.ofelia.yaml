@@ -9,7 +9,7 @@ services:
       - TZ=${TIMEZONE}
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
-      - $PWD/artifacts/logs/ofelia:/logs/ofelia
+      - ofelia-logs:/logs/ofelia
     labels:
       - "ofelia.smtp-host=${CRON_SMTP_HOST}"
       - "ofelia.smtp-port=${CRON_SMTP_PORT}"
@@ -66,3 +66,6 @@ services:
       # Update application usage statics daily at 5am
       - "ofelia.job-exec.usage-statistics.schedule=0 0 5 * * *"
       - "ofelia.job-exec.usage-statistics.command=python manage.py update_daily_usage_statistics"
+
+volumes:
+  ofelia-logs:
