@@ -3,13 +3,13 @@ services:
     image: mcuadros/ofelia:0.3.16
     command: daemon --docker --docker-filter label=com.docker.compose.project=${ENVIRONMENT}
     depends_on:
-      - backend
-      - opaladmin
+      - admin
+      - admin-legacy
     environment:
       - TZ=${TIMEZONE}
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
-      - $PWD/artifacts/logs/ofelia:/logs/ofelia
+      - ofelia-logs:/logs/ofelia
     labels:
       - "ofelia.smtp-host=${CRON_SMTP_HOST}"
       - "ofelia.smtp-port=${CRON_SMTP_PORT}"
@@ -18,7 +18,7 @@ services:
       - "ofelia.mail-only-on-error=${CRON_EMAIL_ONLY_ON_ERROR}"
       - "ofelia.save-folder=/logs/ofelia/"
       - "ofelia.save-only-on-error=true"
-  opaladmin:
+  admin-legacy:
     labels:
       - "ofelia.enabled=true"
       - "ofelia.job-exec.data-control.schedule=* */2 * * * *"
@@ -48,7 +48,7 @@ services:
       - "ofelia.job-exec.appointment-reminder.command=php /var/www/html/publisher/php/sendAppointmentReminders.php"
       - "ofelia.job-exec.delayed-labs.schedule=0 0 */2 * * *"
       - "ofelia.job-exec.delayed-labs.command=php /var/www/html/publisher/php/sendDelayedLabsPushNotifications.php"
-  backend:
+  admin:
     labels:
       - "ofelia.enabled=true"
       # Run the Patient records deviations check daily at 2am
@@ -66,3 +66,6 @@ services:
       # Update application usage statics daily at 5am
       - "ofelia.job-exec.usage-statistics.schedule=0 0 5 * * *"
       - "ofelia.job-exec.usage-statistics.command=python manage.py update_daily_usage_statistics"
+
+volumes:
+  ofelia-logs:

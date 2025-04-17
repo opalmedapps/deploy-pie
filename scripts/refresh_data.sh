@@ -25,26 +25,26 @@ fi
 set -euxo pipefail
 
 echo "Upgrading QuestionnaireDB..."
-docker compose run --rm alembic alembic --name questionnairedb upgrade head
+docker compose run --rm db-management alembic --name questionnairedb upgrade head
 echo "Upgrading OpalDB..."
-docker compose run --rm alembic alembic --name opaldb upgrade head
+docker compose run --rm db-management alembic --name opaldb upgrade head
 
-echo "Migrating backend..."
-docker compose exec backend python manage.py migrate
+echo "Migrating admin..."
+docker compose exec admin python manage.py migrate
 
-docker compose run --rm alembic python -m db_management.run_sql_scripts OpalDB db_management/opaldb/data/truncate/
-docker compose run --rm alembic python -m db_management.run_sql_scripts OpalDB db_management/opaldb/data/initial/
-docker compose run --rm alembic python -m db_management.run_sql_scripts OpalDB db_management/opaldb/data/test/ --disable-foreign-key-checks
-docker compose run --rm alembic python -m db_management.run_sql_scripts OpalDB db_management/opaldb/data/test/$institution_lower/
-docker compose run --rm alembic python -m db_management.run_sql_scripts QuestionnaireDB db_management/questionnairedb/data/truncate/
-docker compose run --rm alembic python -m db_management.run_sql_scripts QuestionnaireDB db_management/questionnairedb/data/initial/
-docker compose run --rm alembic python -m db_management.run_sql_scripts QuestionnaireDB db_management/questionnairedb/data/test/$institution_lower/
-docker compose run --rm alembic python -m db_management.run_sql_scripts QuestionnaireDB db_management/questionnairedb/data/test/
+docker compose run --rm db-management python -m db_management.run_sql_scripts OpalDB db_management/opaldb/data/truncate/
+docker compose run --rm db-management python -m db_management.run_sql_scripts OpalDB db_management/opaldb/data/initial/
+docker compose run --rm db-management python -m db_management.run_sql_scripts OpalDB db_management/opaldb/data/test/ --disable-foreign-key-checks
+docker compose run --rm db-management python -m db_management.run_sql_scripts OpalDB db_management/opaldb/data/test/$institution_lower/
+docker compose run --rm db-management python -m db_management.run_sql_scripts QuestionnaireDB db_management/questionnairedb/data/truncate/
+docker compose run --rm db-management python -m db_management.run_sql_scripts QuestionnaireDB db_management/questionnairedb/data/initial/
+docker compose run --rm db-management python -m db_management.run_sql_scripts QuestionnaireDB db_management/questionnairedb/data/test/$institution_lower/
+docker compose run --rm db-management python -m db_management.run_sql_scripts QuestionnaireDB db_management/questionnairedb/data/test/
 
-# docker compose exec backend python manage.py initialize_data --force-delete
-docker compose exec backend python manage.py insert_test_data $institution --force-delete
+# docker compose exec admin python manage.py initialize_data --force-delete
+docker compose exec admin python manage.py insert_test_data $institution --force-delete
 
 docker compose exec listener node src/firebase/initialize_users.js
-docker compose exec backend python manage.py find_deviations
+docker compose exec admin python manage.py find_deviations
 
 echo "Test data successfully reset."
