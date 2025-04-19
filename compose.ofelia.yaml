@@ -1,6 +1,6 @@
 services:
   ofelia:
-    image: mcuadros/ofelia:0.3.16
+    image: mcuadros/ofelia:0.3.17
     command: daemon --docker --docker-filter label=com.docker.compose.project=${ENVIRONMENT}
     depends_on:
       - admin
