@@ -43,7 +43,7 @@ Otherwise, a cron schedule needs to be set up manually to execute required tasks
 ## Requirements
 
 The remaining instructions assume that you have already
-[created a Firebase project](https://docs.opalmedapps.com/development/setup/#set-up-your-own-firebase-project)
+[created a Firebase project](https://docs.opalmedapps.com/development/local-dev-setup/#create-a-new-firebase-project)
 for communication between the mobile app and the Opal PIE.
 
 It is also assumed that you have the certificate for the Apple Push Notification service
@@ -63,9 +63,6 @@ The required software is:
 * [Docker Compose](https://docs.docker.com/compose/)
 
 ## Prerequisites
-
-You need to be logged into the GitLab container registry.
-Follow the instructions to [authenticate with the container registry](https://docs.gitlab.com/ee/user/packages/container_registry/authenticate_with_container_registry.html).
 
 At the end of setting up a new project using `copier` certain files, such as certificate files,
 are copied to the project directory.
@@ -148,7 +145,6 @@ Some questions are conditional based on your answer to a previous question.
 8. **HTTP port the reverse proxy is listening at**
 
     Requests received via HTTP are redirected to HTTPS.
-
 
 9. **HTTPS port the reverse proxy is listening at**
 
@@ -247,3 +243,16 @@ Run the following command from within the project directory:
 uvx --python ">=3.12" --with copier-templates-extensions --with bcrypt \
     copier update --trust --skip-tasks --defaults
 ```
+
+## Testing
+
+```shell
+uvx --python ">=3.12" --with copier-templates-extensions --with bcrypt copier copy --trust --vcs-ref=update-readme --no-cleanup git+https://github.com/opalmedapps/deploy-pie.git
+```
+
+During generation:
+
+- test changes on a branch with `--vcs-ref=...`
+- can use pre-determined answers file: move it out of the project directory and add `--answers-file .copier-answers.yml`
+- avoid cleanup to look at the structure with `--no-cleanup`
+- if it happens after containers have been `up`ed: `docker compose down && docker volume prune -a` (caution: note that that applies to all local volumes not used by at least one container)
