@@ -150,7 +150,7 @@ services:
         read_only: true
       {%- endif %}
   redis:
-    image: redis:7.4.4-alpine3.21
+    image: redis:8.0.2-alpine3.21
     restart: unless-stopped
   db-management:
     image: ghcr.io/opalmedapps/opal-db-management:main
