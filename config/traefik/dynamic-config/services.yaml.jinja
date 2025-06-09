@@ -3,12 +3,12 @@ http:
   routers:
     labs:
       {# escape curly braces for Jinja #}
-      rule: {% raw %}'Host(`{{ env "APP_HOST" }}`) && PathPrefix(`/opal-labs`)'{% endraw %}
+      rule: {% raw %}'Host(`{{ env "APP_HOST" }}`) && PathPrefix(`/opalAdmin/labs`)'{% endraw %}
       entryPoints:
         - web-secure
       middlewares:
         - redirect-missing-slash
-        - labs-stripprefix
+        - admin-legacy-stripprefix
         - labs-auth
       service: labs
       tls: {}
@@ -57,12 +57,6 @@ http:
         replacement: "https://$1/"
         permanent: false
 
-    labs-stripprefix:
-      # https://doc.traefik.io/traefik/middlewares/http/stripprefix/
-      stripPrefix:
-        prefixes:
-          - "/opal-labs"
-
     labs-auth:
       # https://doc.traefik.io/traefik/middlewares/http/basicauth/
       basicAuth:
@@ -74,13 +68,6 @@ http:
       stripPrefix:
         prefixes:
           - "/opalAdmin"
-
-  # https://doc.traefik.io/traefik/routing/services/
-  services:
-    labs:
-      loadBalancer:
-        servers:
-          - url: http://labs:8080
 
     admin-legacy:
       loadBalancer:
