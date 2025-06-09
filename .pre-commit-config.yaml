@@ -6,7 +6,6 @@ repos:
       - id: end-of-file-fixer
       - id: check-builtin-literals
       - id: check-case-conflict
-      - id: check-docstring-first
       - id: check-executables-have-shebangs
       - id: check-json
         # file contains comments
@@ -24,7 +23,21 @@ repos:
     hooks:
       - id: typos
 
+  - repo: https://github.com/executablebooks/mdformat
+    rev: 0.7.22
+    hooks:
+      - id: mdformat
+        language: python
+        additional_dependencies:
+          - mdformat-mkdocs==4.3.0
+
   - repo: https://github.com/DavidAnson/markdownlint-cli2
     rev: v0.18.1
     hooks:
       - id: markdownlint-cli2
+
+  # zizmor detects security vulnerabilities in GitHub Actions workflows.
+  - repo: https://github.com/woodruffw/zizmor-pre-commit
+    rev: v1.9.0
+    hooks:
+      - id: zizmor
