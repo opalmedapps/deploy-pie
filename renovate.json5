@@ -31,4 +31,19 @@
       "(^|/)(?:docker-)?compose[^/]*\\.ya?ml\\.jinja$",
     ],
   },
+  // Custom version of the dockerfile versions preset to support shell scripts
+  // https://docs.renovatebot.com/presets-customManagers/#custommanagersdockerfileversions
+  "customManagers": [
+    {
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/(^|/|\\.)([Dd]ocker)file$/",
+        "/(^|/)([Dd]ocker)file[^/]*$/",
+        "/(^|/)[^/]*\\.sh$/",
+      ],
+      "matchStrings": [
+        "# renovate: datasource=(?<datasource>[a-zA-Z0-9-._]+?) depName=(?<depName>[^\\s]+?)(?: (lookupName|packageName)=(?<packageName>[^\\s]+?))?(?: versioning=(?<versioning>[^\\s]+?))?(?: extractVersion=(?<extractVersion>[^\\s]+?))?(?: registryUrl=(?<registryUrl>[^\\s]+?))?\\s(?:ENV|ARG)\\s+[A-Za-z0-9_]+?_VERSION[ =][\"']?(?<currentValue>.+?)[\"']?\\s"
+      ]
+    }
+  ],
 }
