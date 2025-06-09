@@ -37,8 +37,8 @@ def is_directory(path: str) -> bool:
 class PathsExtension(Extension):
     def __init__(self, environment: Environment):
         super().__init__(environment)
-        environment.globals["file_exists"] = file_exists
-        environment.globals["directory_exists"] = directory_exists
-        environment.globals["is_readable"] = is_readable
+        environment.globals['file_exists'] = file_exists
+        environment.globals['directory_exists'] = directory_exists
+        environment.globals['is_readable'] = is_readable
         environment.globals['is_absolute'] = is_absolute
         environment.globals['is_directory'] = is_directory

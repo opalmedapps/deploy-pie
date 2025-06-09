@@ -1,17 +1,16 @@
 import secrets
 from pathlib import Path
-from typing import Optional
 
 import bcrypt
 from jinja2 import Environment
 from jinja2.ext import Extension
 
 
-def random_password(length: Optional[int] = None) -> str:
+def random_password(length: int | None = None) -> str:
     return secrets.token_urlsafe(length)
 
 
-def random_token(length: Optional[int] = None) -> str:
+def random_token(length: int | None = None) -> str:
     return secrets.token_hex(length)
 
 

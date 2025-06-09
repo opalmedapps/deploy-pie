@@ -1,6 +1,7 @@
 #!/bin/bash
 set -euo pipefail
 
+# renovate: datasource=docker depName=alpine
 ALPINE_VERSION="3.21.2"
 WAIT_FOR_IT_VERSION="latest"
 

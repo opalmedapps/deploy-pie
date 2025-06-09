@@ -61,7 +61,7 @@ https_port:
   type: int
   help: HTTPS port the reverse proxy is listening at
   default: 443
-  validator: "{% if https_port != 443 }A non-standard port is currently not supported{% endif %}"
+  validator: "{% if https_port != 443 %}A non-standard port is currently not supported{% endif %}"
 
 db_host_type:
   type: str
@@ -131,6 +131,11 @@ db_use_tls:
   help: Connect to the DB server via TLS?
   default: "{% if db_host_type == 'separate_server' %}true{% else %}false{% endif %}"
   when: "{{ db_host_type == 'separate_server' }}"
+
+db_use_adminer:
+  type: bool
+  help: Include an adminer container (use for non-production only)?
+  default: false
 
 use_custom_certs:
   type: bool
@@ -286,6 +291,7 @@ _exclude:
   - "*.py[co]"
   - "__pycache__"
   - ".git"
+  - ".github"
   - ".DS_Store"
   - ".svn"
   # additional
@@ -294,5 +300,7 @@ _exclude:
   - ".gitlab-ci.yml"
   - ".markdownlint.yaml"
   - "renovate.json5"
+  - "ruff.toml"
+  - "zizmor.yml"
   # - "README.md"
   - extensions
