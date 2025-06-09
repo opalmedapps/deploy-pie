@@ -6,7 +6,7 @@ from jinja2.ext import Extension
 
 # taken from Django
 # https://github.com/django/django/blob/main/django/utils/text.py
-def slugify(value, allow_unicode=False):
+def slugify(value, allow_unicode=False):  # noqa: FBT002
     """
     Convert to ASCII if 'allow_unicode' is False. Convert spaces or repeated
     dashes to single dashes. Remove characters that aren't alphanumerics,
@@ -25,4 +25,4 @@ def slugify(value, allow_unicode=False):
 class SlugifyExtension(Extension):
     def __init__(self, environment):
         super().__init__(environment)
-        environment.filters["slugify"] = slugify
+        environment.filters['slugify'] = slugify
