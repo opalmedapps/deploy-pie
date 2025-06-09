@@ -44,6 +44,18 @@ http:
       service: admin-media
       tls: {}
 
+    {% if db_use_adminer -%}
+    adminer:
+      rule: {% raw %}'Host(`{{ env "APP_HOST" }}`) && PathPrefix(`/adminer`)'{% endraw %}
+      entryPoints:
+        - web-secure
+      middlewares:
+        - redirect-missing-slash
+        - adminer-stripprefix
+      service: adminer
+      tls: {}
+    (% endif -%)
+
   middlewares:
     redirect-root:
       redirectRegex:
@@ -64,10 +76,21 @@ http:
           - {% raw %}'{{ env "AUTH_LABS_USERNAME"}}:{{ env "AUTH_LABS_PASSWORD" }}'{% endraw %}
 
     admin-legacy-stripprefix:
-      # # https://doc.traefik.io/traefik/middlewares/http/stripprefix/
+      # https://doc.traefik.io/traefik/middlewares/http/stripprefix/
       stripPrefix:
         prefixes:
           - "/opalAdmin"
+
+    {% if db_use_adminer -%}
+    adminer-stripprefix:
+      # https://doc.traefik.io/traefik/middlewares/http/stripprefix/
+      stripPrefix:
+        prefixes:
+          - "/adminer"
+    (% endif -%)
+
+  # https://doc.traefik.io/traefik/routing/services/
+  services:
 
     admin-legacy:
       loadBalancer:
@@ -83,3 +106,10 @@ http:
       loadBalancer:
         servers:
           - url: http://admin-media:80
+
+    {% if db_use_adminer -%}
+    adminer:
+      loadBalancer:
+        servers:
+          - url: http://adminer:8080
+    (% endif -%)

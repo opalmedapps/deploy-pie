@@ -193,6 +193,10 @@ Some questions are conditional based on your answer to a previous question.
 
     Ensure that the database server only accepts encrypted connections.
 
+1. **Include an [adminer](https://www.adminer.org/en/) container to manage the databases?**
+
+    **IMPORTANT:** Do not use this in a production environment.
+
 1. **Do you need to use a custom CA file to verify HTTPS and DB connections?
     (only shown when an already issued certificate is used or the DB requires a TLS connection)**
 
