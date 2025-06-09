@@ -149,7 +149,6 @@ Some questions are conditional based on your answer to a previous question.
 
     Requests received via HTTP are redirected to HTTPS.
 
-
 9. **HTTPS port the reverse proxy is listening at**
 
     The use of HTTPS is mandatory.
