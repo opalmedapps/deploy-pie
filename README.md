@@ -15,15 +15,15 @@ The following options are supported:
 ### Certificate
 
 1. Use *Let's Encrypt* for issuing a certificate
-2. Use an already issued certificate
+1. Use an already issued certificate
 
 ### Database
 
 1. Run the *MariaDB* database server in a container
-2. Run the *MariaDB* on the same server
-3. Run the *MariaDB* on a different server
-   1. Let clients connect via an unencrypted connection
-   2. Enforce clients to use TLS
+1. Run the *MariaDB* on the same server
+1. Run the *MariaDB* on a different server
+    1. Let clients connect via an unencrypted connection
+    1. Enforce clients to use TLS
 
 ### Private certificate authorities (CA)
 
@@ -56,11 +56,11 @@ ensure that it is configured to require encrypted connections (using TLS).
 
 The required software is:
 
-* [Git](https://git-scm.com/)
-* [`uv`](https://docs.astral.sh/uv/): Used to install and execute `copier`,
-  and will take care of downloading Python if it is not installed
-* [Docker Engine](https://docs.docker.com/engine/)
-* [Docker Compose](https://docs.docker.com/compose/)
+- [Git](https://git-scm.com/)
+- [`uv`](https://docs.astral.sh/uv/): Used to install and execute `copier`,
+    and will take care of downloading Python if it is not installed
+- [Docker Engine](https://docs.docker.com/engine/)
+- [Docker Compose](https://docs.docker.com/compose/)
 
 ## Prerequisites
 
@@ -70,21 +70,21 @@ Whether a file is required depends on the chosen deployment options.
 
 Prepare a directory for these files with the following contents:
 
-* `firebase-admin-key.json`: The private key of the service account used by the [Firebase Admin SDK](https://firebase.google.com/docs/database/admin/start#admin-sdk-authentication)
-* `apn.crt` and `apn.key`: The public and private certificates for the Apple Push Notification service.
+- `firebase-admin-key.json`: The private key of the service account used by the [Firebase Admin SDK](https://firebase.google.com/docs/database/admin/start#admin-sdk-authentication)
+- `apn.crt` and `apn.key`: The public and private certificates for the Apple Push Notification service.
     The private key cannot be password-protected
 
 ### When using an already issued certificate
 
-* `<domain>.crt`: The public certificate for the domain (hostname) where the Opal PIE is being deployed on
-* `<domain>.key`: The private certificate for the domain (hostname) where the Opal PIE is being deployed on
+- `<domain>.crt`: The public certificate for the domain (hostname) where the Opal PIE is being deployed on
+- `<domain>.key`: The private certificate for the domain (hostname) where the Opal PIE is being deployed on
 
 #### When using certificates issued by a private CA
 
-* `ca-certificates.crt`: An updated `ca-certificates.crt` file including the public certificate(s) of the CA
+- `ca-certificates.crt`: An updated `ca-certificates.crt` file including the public certificate(s) of the CA
     that issued the server certificate
-* `db-certs.crt`: The public certificate(s) of the CA that issued the server certificate of the DB server
-  (only required when the DB server is running on a separate server and enforces TLS connections)
+- `db-certs.crt`: The public certificate(s) of the CA that issued the server certificate of the DB server
+    (only required when the DB server is running on a separate server and enforces TLS connections)
 
 ## Generating the project
 
@@ -110,90 +110,90 @@ Some questions are conditional based on your answer to a previous question.
 
     The name of your project is only used in the generated README file.
 
-2. **Where are the extra files located (absolute path)?**
+1. **Where are the extra files located (absolute path)?**
 
     The absolute path to the extra files [described in the prerequisites](#prerequisites).
     Files located in this directory are copied to their required location during the generation.
 
-3. **The name of the environment you are deploying**
+1. **The name of the environment you are deploying**
 
     The environment name (such as *production* or *prod*) is shown in the footer of the OpalAdmin UI.
 
-4. **Which timezone is this running in?**
+1. **Which timezone is this running in?**
 
     The timezone the server is located in.
     A valid TZ identifier must be used.
     See the column *TZ identifier* in the [List of tz database time zones](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List).
 
-5. **Which domain is this going to be available at?**
+1. **Which domain is this going to be available at?**
 
     The domain the Opal PIE is going to be available at.
     Provide the fully qualified domain name (FQDN).
     When using *Let's Encrypt* for the certificate, this is the domain that a certificate will be requested for.
 
-6. **How do you want to deal with the server certificate?**
+1. **How do you want to deal with the server certificate?**
 
     The available choices are:
 
-    * Use [Let's Encrypt via `traefik`](https://doc.traefik.io/traefik/https/acme/) as the certificate resolver
-    * Use an already issued certificate for which you have the public and private certificates (`.crt` and `.key` files)
+    - Use [Let's Encrypt via `traefik`](https://doc.traefik.io/traefik/https/acme/) as the certificate resolver
+    - Use an already issued certificate for which you have the public and private certificates (`.crt` and `.key` files)
 
-7. **Email address to provide to Let's Encrypt (only shown when Let's Encrypt is used)**
+1. **Email address to provide to Let's Encrypt (only shown when Let's Encrypt is used)**
 
     The email address to provide *Let's Encrypt* to notify about an expiring certificate.
 
-8. **HTTP port the reverse proxy is listening at**
+1. **HTTP port the reverse proxy is listening at**
 
     Requests received via HTTP are redirected to HTTPS.
 
-9. **HTTPS port the reverse proxy is listening at**
+1. **HTTPS port the reverse proxy is listening at**
 
     The use of HTTPS is mandatory.
 
     **Important:** `traefik` is currently set up to use the [TLS Challenge](https://doc.traefik.io/traefik/https/acme/#tlschallenge) which requires port `443` to be reachable.
 
-10. **Where do you want to run the DB server?**
+1. **Where do you want to run the DB server?**
 
     The available choices are:
 
-    * In a container on the same server
-    * Directly on the host on the same server
-    * Directly on the host on a different server
+    - In a container on the same server
+    - Directly on the host on the same server
+    - Directly on the host on a different server
 
     For both non-container options it is required that you have a *MariaDB* server already set up with a root user.
 
-11. **What's the hostname of the DB server? (only shown when the DB is on a separate server)**
+1. **What's the hostname of the DB server? (only shown when the DB is on a separate server)**
 
     The hostname of the database server.
 
-12. **Port the DB server is listening at (only shown when the DB is on a separate server)**
+1. **Port the DB server is listening at (only shown when the DB is on a separate server)**
 
     The port the database server is listening at.
 
-13. **Username of the database user**
+1. **Username of the database user**
 
     The database user's name that will be created.
     This user is used by the components to connect to the database.
     The password will be generated automatically.
 
-14. **Username of a database root user (only shown when the DB is not running in a container)**
+1. **Username of a database root user (only shown when the DB is not running in a container)**
 
     This user is used to create the database user and the required databases.
     The user `root` is used when running the DB in a container.
 
-15. **Password of the database root user (only shown when the DB is not running in a container)**
+1. **Password of the database root user (only shown when the DB is not running in a container)**
 
     The password is automatically generated when running the DB in a container.
     The password is treated as a [secret](https://copier.readthedocs.io/en/stable/configuring/#:~:text=secret),
     i.e., it will not be saved in the answers file.
 
-16. **Connect to the DB server via TLS? (only shown when the DB is on a separate server)**
+1. **Connect to the DB server via TLS? (only shown when the DB is on a separate server)**
 
     **IMPORTANT:** Always require encrypted connections to the database in production.
 
     Ensure that the database server only accepts encrypted connections.
 
-17. **Do you need to use a custom CA file to verify HTTPS and DB connections?
+1. **Do you need to use a custom CA file to verify HTTPS and DB connections?
     (only shown when an already issued certificate is used or the DB requires a TLS connection)**
 
     When certificates are issued by a private certificate authority (CA)
@@ -203,17 +203,17 @@ Some questions are conditional based on your answer to a previous question.
     For HTTPS connections the `ca-certificates.crt` file is used.
     For DB connections, the `db-certs.crt` file is used.
 
-18. **Do you want to use Ofelia as a job scheduler to run period jobs?**
+1. **Do you want to use Ofelia as a job scheduler to run period jobs?**
 
     *Ofelia* can be run in a sidecar container to run required jobs periodically.
     It is an alternative to using the cron daemon on the host.
     *Ofelia* sends emails for any failing job.
 
-19. **The Firebase project name**
+1. **The Firebase project name**
 
     The name of the Firebase project that is used for communication with the mobile app.
 
-20. **The 2 character unique institution code**
+1. **The 2 character unique institution code**
 
     Only necessary when using the same mobile app with several institutions.
     In this case, each institution has its own *Opal PIE* and requires a unique 2 character code.
@@ -222,15 +222,15 @@ Some questions are conditional based on your answer to a previous question.
 
     You can leave the proposed default if only one institution is supported.
 
-21. **The app ID of the iOS app**
+1. **The app ID of the iOS app**
 
     The unique app bundle identifier of the iOS app.
 
-22. **Path to the directory containing clinical notes**
+1. **Path to the directory containing clinical notes**
 
     The path to the directory where clinical notes are or should be stored.
 
-23. **What domain is the registration website deployed at?**
+1. **What domain is the registration website deployed at?**
 
     The fully qualified domain name of the registration website.
     The website must be accessible via HTTPS.

@@ -1,6 +1,6 @@
 services:
   traefik:
-    image: traefik:v3.3.6
+    image: traefik:v3.4.1
     ports:
       - "${HTTP_PORT}:80"
       - "${HTTPS_PORT}:443"
@@ -39,7 +39,7 @@ services:
       {% endif -%}
   {%- if db_host_type == "container" %}
   db:
-    image: mariadb:10.11.11-jammy
+    image: mariadb:10.11.13-jammy
     restart: unless-stopped
     environment:
       - MARIADB_ROOT_PASSWORD=${DB_ROOT_PASSWORD}
@@ -113,7 +113,7 @@ services:
         read_only: true
       {%- endif %}
   admin-media:
-    image: joseluisq/static-web-server:2.36.1
+    image: joseluisq/static-web-server:2.37.0
     restart: unless-stopped
     depends_on:
       - admin
@@ -150,7 +150,7 @@ services:
         read_only: true
       {%- endif %}
   redis:
-    image: redis:7.4.2-alpine3.21
+    image: redis:7.4.4-alpine3.21
     restart: unless-stopped
   db-management:
     image: ghcr.io/opalmedapps/opal-db-management:main
