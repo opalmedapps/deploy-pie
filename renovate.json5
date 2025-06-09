@@ -24,7 +24,7 @@
   // https://docs.renovatebot.com/configuration-options/#rebasewhen
   "rebaseWhen": "conflicted",
   "docker-compose": {
-    "fileMatch": [
+    "managerFilePatterns": [
       // default: https://docs.renovatebot.com/modules/manager/docker-compose/#default-config
       "(^|/)(?:docker-)?compose[^/]*\\.ya?ml$",
       // also detect jinja compose files

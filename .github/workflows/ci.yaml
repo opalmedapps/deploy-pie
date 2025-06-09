@@ -1,0 +1,28 @@
+# SPDX-FileCopyrightText: Copyright (C) 2025 Opal Health Informatics Group <https://www.opalmedapps.com>
+#
+# SPDX-License-Identifier: MIT
+name: ci
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+  workflow_dispatch:
+  merge_group:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || '' }}
+  cancel-in-progress: true
+
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4.2.2
+        with:
+          persist-credentials: false
+      - uses: pre-commit/action@v3.0.1
