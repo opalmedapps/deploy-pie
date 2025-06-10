@@ -214,11 +214,12 @@ _message_after_copy: |
 
        $ cd {{ _copier_conf.dst_path }}/
 
-    2. Commit the initial state to the initialized Git repository
-    3. Read "README.md".
-    4. Open OpalAdmin: https://{{ domain }}:{{ https_port }}/opalAdmin/
-    5. Log in with username "admin" and password "{{ admin_password }}"
-    6. Provide the interface engine with the following credentials for inserting lab results using HTTP basic auth:
+    2. Initialize a Git repository
+    3. Commit the initial state to the initialized Git repository
+    4. Read "README.md".
+    5. Open OpalAdmin: https://{{ domain }}:{{ https_port }}/opalAdmin/
+    6. Log in with username "admin" and password "{{ admin_password }}"
+    7. Provide the interface engine with the following credentials for inserting lab results using HTTP basic auth:
 
         username: interface-engine
         password: {{ labs_password }}
@@ -227,13 +228,44 @@ _message_after_copy: |
     NOTE: The passwords shown above can not be retrieved again. Please add them to your password manager for future reference.
 
 _tasks:
+  # validation
+  - "Checking that required files are provided"
+  - command: |
+      echo Firebase admin key missing
+      exit 1
+    when: "{{ not file_exists(extra_files + '/firebase-admin-key.json') }}"
+  - command: |
+      echo Apple Push Notification certificate missing
+      exit 1
+    when: "{{ not file_exists(extra_files + '/apn.crt') }}"
+  - command: |
+      echo Apple Push Notification certificate private key missing
+      exit 1
+    when: "{{ not file_exists(extra_files + '/apn.key') }}"
+  - command: |
+      echo Custom public certificate missing
+      exit 1
+    when: "{{ certificate_type != 'letsencrypt' and not file_exists(extra_files + '/' + domain + '.crt') }}"
+  - command: |
+      echo Custom private certificate missing
+      exit 1
+    when: "{{ certificate_type != 'letsencrypt' and not file_exists(extra_files + '/' + domain + '.key') }}"
+  - command: |
+      echo DB certs file with public CA certificate(s) missing
+      exit 1
+    when: "{{ use_custom_certs and not file_exists(extra_files + '/db-certs.crt') }}"
+  - command: |
+      echo CA certificates file with public CA certificate(s) missing
+      exit 1
+    when: "{{ use_custom_certs and not file_exists(extra_files + '/ca-certificates.crt') }}"
+  # validation succeeded
   - "echo Copying extra files into project directory..."
-  - python scripts/copy_file.py {{ extra_files }}/firebase-admin-key.json config/firebase/service-account.json --chmod 0644
-  - command: python scripts/copy_file.py {{ extra_files }}/db-certs.crt certs/db-certs.crt --chmod 0644
+  - "{{ _copier_python }} scripts/copy_file.py {{ extra_files }}/firebase-admin-key.json config/firebase/service-account.json --chmod 0644"
+  - command: "{{ _copier_python }} scripts/copy_file.py {{ extra_files }}/db-certs.crt certs/db-certs.crt --chmod 0644"
     when: "{{ use_custom_certs }}"
-  - command: python scripts/copy_file.py {{ extra_files }}/{{ domain }}.crt certs/server.crt --chmod 0644
+  - command: "{{ _copier_python }} scripts/copy_file.py {{ extra_files }}/{{ domain }}.crt certs/server.crt --chmod 0644"
     when: "{{ certificate_type != 'letsencrypt' }}"
-  - command: python scripts/copy_file.py {{ extra_files }}/{{ domain }}.key certs/server.key --chmod 0644
+  - command: "{{ _copier_python }} scripts/copy_file.py {{ extra_files }}/{{ domain }}.key certs/server.key --chmod 0644"
     when: "{{ certificate_type != 'letsencrypt' }}"
   # create traefik certs directory when using let's encrypt
   # the ACME file needs 600 file mode: https://doc.traefik.io/traefik/https/acme/#storage
@@ -242,9 +274,9 @@ _tasks:
       touch config/traefik/certs/acme.json
       chmod 0600 config/traefik/certs/acme.json
     when: "{{ certificate_type == 'letsencrypt' }}"
-  - python scripts/copy_file.py {{ extra_files }}/apn.crt certs/apn.crt --chmod 0644
-  - python scripts/copy_file.py {{ extra_files }}/apn.key certs/apn.key --chmod 0644
-  - command: python scripts/copy_file.py {{ extra_files}}/ca-certificates.crt certs/ca-certificates.crt --chmod 0644
+  - "{{ _copier_python }} scripts/copy_file.py {{ extra_files }}/apn.crt certs/apn.crt --chmod 0644"
+  - "{{ _copier_python }} scripts/copy_file.py {{ extra_files }}/apn.key certs/apn.key --chmod 0644"
+  - command: "{{ _copier_python }} scripts/copy_file.py {{ extra_files}}/ca-certificates.crt certs/ca-certificates.crt --chmod 0644"
     when: "{{ use_custom_certs }}"
   # create clinical notes if it is a relative directory
   - command: mkdir -p {{ clinical_notes_path }}
@@ -270,7 +302,6 @@ _tasks:
   # run the remaining services
   - command: |
       docker compose up -d
-  # - command: git init
 
 # https://copier.readthedocs.io/en/latest/configuring/#jinja_extensions
 _jinja_extensions:
