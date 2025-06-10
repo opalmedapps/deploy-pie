@@ -102,7 +102,7 @@ db_password:
   type: str
   help: Password of the database user (leave as is for generated one)
   secret: true
-  default: "{{ existing_secret('.env', 'DB_PASSWORD') | default: random_password(20) }}"
+  default: "{{ existing_secret('.env', 'DB_PASSWORD') or random_password(20) }}"
   when: false
 
 db_root_user:
@@ -118,7 +118,7 @@ db_root_password:
   secret: true
   default: |-
     {% if db_host_type == "container" -%}
-      {{ existing_secret('.env', 'DB_ROOT_PASSWORD') | default: random_password(32) }}
+      {{ existing_secret('.env', 'DB_ROOT_PASSWORD') or random_password(32) }}
     {%- else -%}
       {#- Force the user to type a password -#}
 
@@ -177,12 +177,12 @@ domain_registration:
 
 listener_token:
   type: str
-  default: "{{ existing_secret('.envs/listener.env', 'BACKEND_LISTENER_AUTH_TOKEN') | default: random_token(20) }}"
+  default: "{{ existing_secret('.envs/listener.env', 'BACKEND_LISTENER_AUTH_TOKEN') or random_token(20) }}"
   when: false
 
 listener_registration_token:
   type: str
-  default: "{{ existing_secret('.envs/listener.env', 'BACKEND_REGISTRATION_AUTH_TOKEN') | default: random_token(20) }}"
+  default: "{{ existing_secret('.envs/listener.env', 'BACKEND_REGISTRATION_AUTH_TOKEN') or random_token(20) }}"
   when: false
 
 interface_engine_token:
@@ -192,7 +192,7 @@ interface_engine_token:
 
 admin_token:
   type: str
-  default: "{{ existing_secret('.envs/admin-legacy.env', 'NEW_OPALADMIN_TOKEN') | default: random_token(20) }}"
+  default: "{{ existing_secret('.envs/admin-legacy.env', 'NEW_OPALADMIN_TOKEN') or random_token(20) }}"
   when: false
 
 admin_password:
