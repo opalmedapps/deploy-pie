@@ -6,7 +6,7 @@ ALPINE_VERSION="3.22.0"
 WAIT_FOR_IT_VERSION="latest"
 
 echo "Waiting for DB container to be ready..."
-docker run --rm -it --network opal-${ENVIRONMENT} chainguard/wait-for-it:${WAIT_FOR_IT_VERSION} --host="$DB_HOST" --port="$DB_PORT" --timeout=10
+docker run --rm -it --network opal-${ENVIRONMENT} chainguard/wait-for-it:${WAIT_FOR_IT_VERSION} --host="$DB_HOST" --port="$DB_PORT" --timeout=20
 
 echo "Running container for mysql-client..."
 docker run --rm --interactive \
