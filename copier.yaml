@@ -269,7 +269,7 @@ _tasks:
   - command: |
       echo DB port {{ db_port }} on {{ db_host }} is not reachable
       exit 1
-    when: "{{ is_port_available(db_port, db_host) }}"
+    when: "{{ db_host_type != 'container' and is_port_available(db_port, db_host) }}"
   # validation succeeded
   - "echo Copying extra files into project directory..."
   - "{{ _copier_python }} scripts/copy_file.py {{ extra_files }}/firebase-admin-key.json config/firebase/service-account.json --chmod 0644"
