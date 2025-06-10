@@ -18,7 +18,7 @@ def bcrypt_hash(value: str) -> str:
     return bcrypt.hashpw(value.encode(), bcrypt.gensalt(prefix=b'2a')).decode()
 
 
-def existing_secret(filepath: str, name: str) -> str:
+def existing_secret(filepath: str, name: str) -> str | None:
     path = Path(filepath)
     if path.exists():
         with path.open() as file:
@@ -26,7 +26,7 @@ def existing_secret(filepath: str, name: str) -> str:
                 if line.startswith(f'{name}='):
                     return line.split('=')[1].strip().removeprefix('"').removesuffix('"')
 
-    return ''
+    return None
 
 
 class SecretsExtension(Extension):
