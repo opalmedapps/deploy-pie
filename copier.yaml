@@ -231,33 +231,45 @@ _tasks:
   # validation
   - "Checking that required files are provided"
   - command: |
-      echo Firebase admin key missing
+      echo Firebase admin key missing at {{ extra_files + '/firebase-admin-key.json' }}
       exit 1
     when: "{{ not file_exists(extra_files + '/firebase-admin-key.json') }}"
   - command: |
-      echo Apple Push Notification certificate missing
+      echo Apple Push Notification certificate missing at {{ extra_files + '/apn.crt' }}
       exit 1
     when: "{{ not file_exists(extra_files + '/apn.crt') }}"
   - command: |
-      echo Apple Push Notification certificate private key missing
+      echo Apple Push Notification certificate private key missing at {{ extra_files + '/apn.key' }}
       exit 1
     when: "{{ not file_exists(extra_files + '/apn.key') }}"
   - command: |
-      echo Custom public certificate missing
+      echo Custom public certificate missing at {{ extra_files + '/' + domain + '.crt' }}
       exit 1
     when: "{{ certificate_type != 'letsencrypt' and not file_exists(extra_files + '/' + domain + '.crt') }}"
   - command: |
-      echo Custom private certificate missing
+      echo Custom private certificate missing at {{ extra_files + '/' + domain + '.key' }}
       exit 1
     when: "{{ certificate_type != 'letsencrypt' and not file_exists(extra_files + '/' + domain + '.key') }}"
   - command: |
-      echo DB certs file with public CA certificate(s) missing
+      echo DB certs file with public CA certificate(s) missing at {{ extra_files + '/db-certs.crt' }}
       exit 1
     when: "{{ use_custom_certs and not file_exists(extra_files + '/db-certs.crt') }}"
   - command: |
-      echo CA certificates file with public CA certificate(s) missing
+      echo CA certificates file with public CA certificate(s) missing at {{ extra_files + '/ca-certificates.crt' }}
       exit 1
     when: "{{ use_custom_certs and not file_exists(extra_files + '/ca-certificates.crt') }}"
+  - command: |
+      echo HTTP port {{ http_port }} is already allocated
+      exit 1
+    when: "{{ not is_port_available(http_port) }}"
+  - command: |
+      echo HTTPS port {{ https_port }} is already allocated
+      exit 1
+    when: "{{ not is_port_available(https_port) }}"
+  - command: |
+      echo DB port {{ db_port }} on {{ db_host }} is not reachable
+      exit 1
+    when: "{{ is_port_available(db_port, db_host) }}"
   # validation succeeded
   - "echo Copying extra files into project directory..."
   - "{{ _copier_python }} scripts/copy_file.py {{ extra_files }}/firebase-admin-key.json config/firebase/service-account.json --chmod 0644"
@@ -312,6 +324,7 @@ _jinja_extensions:
   - extensions/timezone.py:TimezoneExtension
   - extensions/secrets.py:SecretsExtension
   - extensions/paths.py:PathsExtension
+  - extensions/network.py:NetworkExtension
 
 # https://copier.readthedocs.io/en/latest/configuring/#exclude
 _exclude:
