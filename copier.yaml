@@ -229,7 +229,7 @@ _message_after_copy: |
 
 _tasks:
   # validation
-  - "Checking that required files are provided"
+  - "echo Checking that required files are provided"
   - command: |
       echo Firebase admin key missing at {{ extra_files + '/firebase-admin-key.json' }}
       exit 1
