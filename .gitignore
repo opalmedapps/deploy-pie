@@ -3,7 +3,7 @@ generated/
 
 certs/*
 config/firebase/
-config/traefik/certs
+config/traefik/certs/
 artifacts/
 
 compose.override.yaml

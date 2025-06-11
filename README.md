@@ -245,7 +245,7 @@ Run the following command from within the project directory:
 
 ```shell
 uvx --python ">=3.12" --with copier-templates-extensions --with bcrypt \
-    copier update --trust --skip-tasks --defaults
+    copier update --trust --skip-tasks --skip-answered
 ```
 
 ## Testing
