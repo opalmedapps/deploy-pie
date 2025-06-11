@@ -197,12 +197,12 @@ admin_token:
 
 admin_password:
   type: str
-  default: "{% if run_setup %}{{ random_token(32) }}{% endif %}"
+  default: "{% if run_setup %}{{ random_password(32) }}{% endif %}"
   when: false
 
 labs_password:
   type: str
-  default: "{% if run_setup %}{{ random_token(20) }}{% endif %}"
+  default: "{% if run_setup %}{{ random_password(20) }}{% endif %}"
   when: false
 
 _message_after_copy: |
