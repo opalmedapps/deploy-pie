@@ -13,6 +13,8 @@ services:
     labels:
       - "ofelia.smtp-host=${CRON_SMTP_HOST}"
       - "ofelia.smtp-port=${CRON_SMTP_PORT}"
+      - "ofelia.smtp-user=${CRON_SMTP_USER}"
+      - "ofelia.smtp-password=${CRON_SMTP_PASSWORD}"
       - "ofelia.email-to=${CRON_EMAIL_TO}"
       - "ofelia.email-from=${CRON_EMAIL_FROM}"
       - "ofelia.mail-only-on-error=${CRON_EMAIL_ONLY_ON_ERROR}"
@@ -21,7 +23,7 @@ services:
   admin-legacy:
     labels:
       - "ofelia.enabled=true"
-      - "ofelia.job-exec.data-control.schedule=* */2 * * * *"
+      - "ofelia.job-exec.data-control.schedule=0 */2 * * * *"
       - "ofelia.job-exec.data-control.command=/var/www/html/publisher/dataControl.pl"
       - "ofelia.job-exec.data-control.no-overlap=true"
       - "ofelia.job-exec.announcements.schedule=0 * * * * *"
