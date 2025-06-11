@@ -18,10 +18,13 @@ project_slug:
 extra_files:
   type: str
   help: Where are the extra files located (absolute path)?
+  when: "{{ run_setup }}"
   validator: |
+    {% if run_setup %}
     {% if extra_files | length < 1 %}Required{% endif %}
     {% if not is_directory(extra_files) %}Not a directory{% endif %}
     {% if not is_absolute(extra_files) %}Please provide an absolute path{% endif %}
+    {% endif %}
 
 environment:
   type: str
