@@ -54,7 +54,7 @@ http:
         - adminer-stripprefix
       service: adminer
       tls: {}
-    {% endif -%}
+    {%- endif %}
 
   middlewares:
     redirect-root:
@@ -87,7 +87,7 @@ http:
       stripPrefix:
         prefixes:
           - "/adminer"
-    {% endif -%}
+    {%- endif %}
 
   # https://doc.traefik.io/traefik/routing/services/
   services:
@@ -112,4 +112,4 @@ http:
       loadBalancer:
         servers:
           - url: http://adminer:8080
-    {% endif -%}
+    {%- endif %}
