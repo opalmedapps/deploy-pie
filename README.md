@@ -51,8 +51,11 @@ to send push notifications to your iOS app.
 
 If the database should not be run in a container, a *MariaDB* server has to be setup and configured.
 You will be required to enter the credentials of a root user for the database setup.
+
 **Important:** When the database is running on a separate server,
 ensure that it is configured to require encrypted connections (using TLS).
+You also need to enable the event scheduler.
+See the `.cnf` files in the `db-management` project on how to configure MariaDB accordingly: https://github.com/opalmedapps/opal-db-management/tree/main/config
 
 The required software is:
 

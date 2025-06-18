@@ -46,6 +46,10 @@ services:
       - TZ=${TIMEZONE}
     volumes:
       - db-data:/var/lib/mysql
+      - type: bind
+        source: ./config/mariadb/scheduler.cnf
+        target: /etc/mysql/conf.d/scheduler.cnf
+        read_only: true
   {%- endif %}
   admin-legacy:
     image: ghcr.io/opalmedapps/opal-admin-legacy:main
