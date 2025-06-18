@@ -32,20 +32,22 @@ docker compose run --rm db-management alembic --name opaldb upgrade head
 echo "Migrating admin..."
 docker compose exec admin python manage.py migrate
 
+# Truncate legacy DBs first in order for insert_test_data command to be able to insert legacy records as well
+docker compose run --rm db-management python -m db_management.run_sql_scripts OpalDB db_management/opaldb/data/truncate/
+docker compose run --rm db-management python -m db_management.run_sql_scripts QuestionnaireDB db_management/questionnairedb/data/truncate/
+
 # TODO: figure out if this is still needed
 # docker compose exec admin python manage.py initialize_data --force-delete
 docker compose exec admin python manage.py insert_test_data $institution --force-delete
 
-docker compose run --rm db-management python -m db_management.run_sql_scripts QuestionnaireDB db_management/questionnairedb/data/truncate/
 docker compose run --rm db-management python -m db_management.run_sql_scripts QuestionnaireDB db_management/questionnairedb/data/initial/
 docker compose run --rm db-management python -m db_management.run_sql_scripts QuestionnaireDB db_management/questionnairedb/data/test/$institution_lower/
 docker compose run --rm db-management python -m db_management.run_sql_scripts QuestionnaireDB db_management/questionnairedb/data/test/
-docker compose run --rm db-management python -m db_management.run_sql_scripts OpalDB db_management/opaldb/data/truncate/
 docker compose run --rm db-management python -m db_management.run_sql_scripts OpalDB db_management/opaldb/data/initial/
 docker compose run --rm db-management python -m db_management.run_sql_scripts OpalDB db_management/opaldb/data/test/
 docker compose run --rm db-management python -m db_management.run_sql_scripts OpalDB db_management/opaldb/data/test/$institution_lower/
 
-docker compose exec admin cat opal/core/management/commands/files/initialize_firebase_users.js | docker compose exec --no-TTY app node
+docker compose exec admin cat opal/core/management/commands/files/initialize_firebase_users.js | docker compose exec --no-TTY listener node
 docker compose exec admin python manage.py find_deviations
 
 echo "Test data successfully reset."
