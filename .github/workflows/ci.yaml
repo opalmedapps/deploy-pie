@@ -22,7 +22,7 @@ jobs:
     permissions:
       contents: read
     steps:
-      - uses: actions/checkout@v4.2.2
+      - uses: actions/checkout@v4.3.0
         with:
           persist-credentials: false
       - uses: pre-commit/action@v3.0.1
