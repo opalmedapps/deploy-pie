@@ -18,7 +18,7 @@ def is_readable(file: str) -> bool:
     filepath = Path(file)
 
     try:
-        with filepath.open():
+        with filepath.open(encoding='utf-8'):
             return True
     except OSError:
         pass

@@ -21,7 +21,7 @@ def bcrypt_hash(value: str) -> str:
 def existing_secret(filepath: str, name: str) -> str | None:
     path = Path(filepath)
     if path.exists():
-        with path.open() as file:
+        with path.open(encoding='utf-8') as file:
             for line in file.readlines():
                 if line.startswith(f'{name}='):
                     return line.split('=')[1].strip().removeprefix('"').removesuffix('"')
