@@ -1,6 +1,6 @@
 services:
   ofelia:
-    image: mcuadros/ofelia:0.3.18
+    image: mcuadros/ofelia:0.3.19
     command: daemon --docker --docker-filter label=com.docker.compose.project.working_dir=$PWD
     depends_on:
       - admin
