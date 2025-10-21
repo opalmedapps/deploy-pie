@@ -2,7 +2,7 @@
 set -euo pipefail
 
 # renovate: datasource=docker depName=alpine
-ALPINE_VERSION="3.22.1"
+ALPINE_VERSION="3.22.2"
 WAIT_FOR_IT_VERSION="latest"
 
 echo "Waiting for DB container to be ready..."
