@@ -20,7 +20,7 @@ repos:
 
   # https://docs.astral.sh/ruff/integrations/#pre-commit
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.14.1
+    rev: v0.14.4
     hooks:
       # Run the linter with fixes
       - id: ruff-check
@@ -29,7 +29,7 @@ repos:
       - id: ruff-format
 
   - repo: https://github.com/crate-ci/typos
-    rev: v1.38.1
+    rev: v1.39.0
     hooks:
       - id: typos
 
@@ -39,7 +39,7 @@ repos:
       - id: mdformat
         language: python
         additional_dependencies:
-          - mdformat-mkdocs==4.4.1
+          - mdformat-mkdocs==4.4.2
 
   - repo: https://github.com/DavidAnson/markdownlint-cli2
     rev: v0.18.1
@@ -48,7 +48,7 @@ repos:
 
   # zizmor detects security vulnerabilities in GitHub Actions workflows.
   - repo: https://github.com/woodruffw/zizmor-pre-commit
-    rev: v1.15.2
+    rev: v1.16.3
     hooks:
       - id: zizmor
 
