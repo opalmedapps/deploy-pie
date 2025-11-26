@@ -46,6 +46,7 @@ docker compose run --rm db-management python -m db_management.run_sql_scripts Qu
 docker compose run --rm db-management python -m db_management.run_sql_scripts OpalDB db_management/opaldb/data/initial/
 docker compose run --rm db-management python -m db_management.run_sql_scripts OpalDB db_management/opaldb/data/test/
 docker compose run --rm db-management python -m db_management.run_sql_scripts OpalDB db_management/opaldb/data/test/$institution_lower/
+docker compose run --rm db-management python -m db_management.run_sql_scripts OpalDB db_management/opaldb/data/test/notifications/
 
 docker compose exec admin cat opal/core/management/commands/files/initialize_firebase_users.js | docker compose exec --no-TTY listener node
 docker compose exec admin python manage.py find_deviations
