@@ -313,7 +313,7 @@ _tasks:
   - docker compose up -d admin
   # Migrate schemas and initialize data
   - command: |
-      LISTENER_TOKEN="{{ listener_token }}" LISTENER_REGISTRATION_TOKEN="{{ listener_registration_token }}" INTERFACE_ENGINE_TOKEN="{{ interface_engine_token }}" ADMIN_TOKEN="{{ admin_token }}" ADMIN_PASSWORD={{ admin_password }} ./scripts/initialize.sh
+      LISTENER_TOKEN="{{ listener_token }}" LISTENER_REGISTRATION_TOKEN="{{ listener_registration_token }}" INTERFACE_ENGINE_TOKEN="{{ interface_engine_token }}" INTERFACE_ENGINE_PASSWORD="{{ labs_password }}" ADMIN_TOKEN="{{ admin_token }}" ADMIN_PASSWORD={{ admin_password }} ./scripts/initialize.sh
   # run the remaining services
   - command: |
       docker compose up -d
