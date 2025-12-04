@@ -7,12 +7,8 @@
     // set timezone to local one to ensure schedules are run
     // https://docs.renovatebot.com/configuration-options/#timezone
     ":timezone(America/Toronto)",
-    // enable updates for pre-commit
-    // https://docs.renovatebot.com/modules/manager/pre-commit/
-    // https://docs.renovatebot.com/presets-default/#enableprecommit
-    ":enablePreCommit",
     "github>mschoettle/renovate-presets//presets/docker-alpine.json5",
-    "github>mschoettle/renovate-presets//presets/packages/typos.json5",
+    "github>mschoettle/renovate-presets//presets/pre-commit-hooks.json5",
   ],
   // https://docs.renovatebot.com/configuration-options/#assignees
   "assignees": ["mschoettle"],
@@ -24,22 +20,7 @@
   //
   // https://docs.renovatebot.com/configuration-options/#rebasewhen
   "rebaseWhen": "conflicted",
-  // https://docs.renovatebot.com/configuration-options/#packagerules
-  "packageRules": [
-    // Reduce noise of pre-commit hooks
-    {
-      "matchManagers": [
-        "pre-commit",
-      ],
-      "groupName": "pre-commit hooks",
-      "separateMajorMinor": false,
-      "separateMinorPatch": false,
-      // Restrict to weekly updates
-      "schedule": [
-        "before 12pm on Monday",
-      ],
-    }
-  ],
+  // Also get updates for images in jinja templates
   "docker-compose": {
     "managerFilePatterns": [
       // default: https://docs.renovatebot.com/modules/manager/docker-compose/#default-config
