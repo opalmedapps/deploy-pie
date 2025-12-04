@@ -24,9 +24,9 @@
   "docker-compose": {
     "managerFilePatterns": [
       // default: https://docs.renovatebot.com/modules/manager/docker-compose/#default-config
-      "(^|/)(?:docker-)?compose[^/]*\\.ya?ml$",
+      "/(^|/)(?:docker-)?compose[^/]*\\.ya?ml$/",
       // also detect jinja compose files
-      "(^|/)(?:docker-)?compose[^/]*\\.ya?ml\\.jinja$",
+      "/(^|/)(?:docker-)?compose[^/]*\\.ya?ml\\.jinja$/",
     ],
   },
   // Custom version of the dockerfile versions preset to support shell scripts
