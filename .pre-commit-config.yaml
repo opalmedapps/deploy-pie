@@ -20,7 +20,7 @@ repos:
 
   # https://docs.astral.sh/ruff/integrations/#pre-commit
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.14.7
+    rev: v0.14.9
     hooks:
       # Run the linter with fixes
       - id: ruff-check
@@ -42,7 +42,7 @@ repos:
           - mdformat-mkdocs==5.1.1
 
   - repo: https://github.com/DavidAnson/markdownlint-cli2
-    rev: v0.19.1
+    rev: v0.20.0
     hooks:
       - id: markdownlint-cli2
 
