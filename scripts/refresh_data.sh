@@ -50,5 +50,6 @@ docker compose run --rm db-management python -m db_management.run_sql_scripts Op
 
 docker compose exec admin cat opal/core/management/commands/files/initialize_firebase_users.js | docker compose exec --no-TTY listener node
 docker compose exec admin python manage.py find_deviations
+docker compose exec admin python manage.py find_questionnaire_respondent_deviations
 
 echo "Test data successfully reset."

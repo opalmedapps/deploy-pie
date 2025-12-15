@@ -35,7 +35,7 @@ CREATE DATABASE IF NOT EXISTS \`$DB_NAME\` /*!40100 DEFAULT CHARACTER SET utf8mb
 CREATE DATABASE IF NOT EXISTS \`OpalDB\` /*!40100 DEFAULT CHARACTER SET latin1 */;
 CREATE DATABASE IF NOT EXISTS \`QuestionnaireDB\` /*!40100 DEFAULT CHARACTER SET utf8 */;
 EOIF
-echo "Successfully created DB"
+echo "Successfully created DBs"
 echo "Granting privileges to DB user..."
 MYSQL_PWD=${DB_ROOT_PASSWORD} mariadb --protocol tcp --skip-ssl --user ${DB_ROOT_USER} --host ${DB_HOST} --port ${DB_PORT} <<'EOIF'
 GRANT ALL PRIVILEGES ON \`$DB_NAME\`.* TO '$DB_USER'@'%';
