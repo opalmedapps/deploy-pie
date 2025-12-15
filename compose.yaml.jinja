@@ -117,7 +117,7 @@ services:
         read_only: true
       {%- endif %}
   admin-media:
-    image: joseluisq/static-web-server:2.40.0
+    image: joseluisq/static-web-server:2.40.1
     restart: unless-stopped
     depends_on:
       - admin
