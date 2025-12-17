@@ -77,6 +77,16 @@ Prepare a directory for these files with the following contents:
 - `apn.crt` and `apn.key`: The public and private certificates for the Apple Push Notification service.
     The private key cannot be password-protected
 
+### Details
+
+#### Firebase Service Account
+
+To retrieve the [service account for Firebase](https://firebase.google.com/docs/database/admin/start#admin-sdk-authentication), follow our documentation on the [Firebase project setup](https://docs.opalmedapps.com/install/firebase-project-setup/).
+
+#### Apple Push Notification Certificates
+
+See our documentation on how to [retrieve the Apple Push Notification certificates](https://docs.opalmedapps.com/install/#retrieve-the-apple-push-notification-certificates).
+
 ### When using an already issued certificate
 
 - `<domain>.crt`: The public certificate for the domain (hostname) where the Opal PIE is being deployed on
