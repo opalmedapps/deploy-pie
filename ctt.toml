@@ -1,0 +1,16 @@
+# Specify shared data across all 'output' destinations
+# Note that the copier.yml defaults are used whenever the key is not set in this file
+[defaults]
+project_name = "test"
+extra_files = "/Users/mschoettle/Documents/Development/oss/opalmedapps/deploy-pie/.ctt/extra"
+environment = "test"
+certificate_type = "letsencrypt"
+# required for letsencrypt
+admin_email = "test"
+db_host_type = "container"
+firebase_project_name = "test"
+app_id = "com.hig.test"
+domain_registration = "registration.opalmedapps.ca"
+
+# Parametrize each output with a relative path and optionally any values to override
+[output.".ctt/defaults"]
