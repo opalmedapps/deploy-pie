@@ -18,6 +18,8 @@ _extra_tasks = [
 # ensure that the secrets file is included during test
 [output.".ctt/defaults"]
 _extra_tasks = [
+  "echo {{ labs_password }} > secret",
+  "cat secret",
   "ls .secrets.yaml",
   "docker compose down",
 ]
