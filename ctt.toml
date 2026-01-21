@@ -1,9 +1,9 @@
-# Specify shared data across all 'output' destinations
-# Note that the copier.yml defaults are used whenever the key is not set in this file
+# https://copier-template-tester.kyleking.me/#configuration-file
+# minimal defaults required to generate a project
 [defaults]
+is_test = true
 project_name = "test"
 extra_files = "/home/runner/work/deploy-pie/deploy-pie/.ctt/extra"
-environment = "test"
 certificate_type = "letsencrypt"
 # required for letsencrypt
 admin_email = "test"
@@ -17,3 +17,12 @@ _extra_tasks = [
 
 # Parametrize each output with a relative path and optionally any values to override
 [output.".ctt/defaults"]
+_extra_tasks = [
+  "! ls .secrets.yaml.jinja"
+]
+
+[output.".ctt/no_test"]
+is_test = false
+_extra_tasks = [
+  "! ls .secrets.yaml.jinja"
+]

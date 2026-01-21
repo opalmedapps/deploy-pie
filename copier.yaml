@@ -4,6 +4,13 @@ run_setup:
   default: "{{ performed_copy is not defined or performed_copy is false }}"
   when: false
 
+# only used for testing via copier-template-tester to get a secrets file
+is_test:
+  type: bool
+  default: false
+  when: false
+  secret: true
+
 project_name:
   type: str
   help: What is your project name?
@@ -334,6 +341,7 @@ _exclude:
   # default
   - copier.yaml
   - copier.yml
+  - "{% if not is_test %}.secrets.yaml{% endif %}"
   - "~*"
   - "*.py[co]"
   - "__pycache__"
