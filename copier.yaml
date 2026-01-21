@@ -284,6 +284,7 @@ _tasks:
   - "echo Copying extra files into project directory..."
   - mkdir -p config/firebase
   - "{{ _copier_python }} scripts/copy_file.py {{ extra_files }}/firebase-admin-key.json config/firebase/service-account.json --chmod 0644"
+  - mkdir -p certs/
   - command: "{{ _copier_python }} scripts/copy_file.py {{ extra_files }}/db-certs.crt certs/db-certs.crt --chmod 0644"
     when: "{{ use_custom_certs }}"
   - command: "{{ _copier_python }} scripts/copy_file.py {{ extra_files }}/{{ domain }}.crt certs/server.crt --chmod 0644"
