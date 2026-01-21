@@ -42,4 +42,4 @@ jobs:
           uv run --with copier --with copier-templates-extensions --with bcrypt --with copier-template-tester ctt
       - name: Stop all containers
         run: |
-          docker stop "$(docker ps -aq)"
+          docker ps
