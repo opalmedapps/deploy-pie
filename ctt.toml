@@ -18,7 +18,7 @@ _extra_tasks = [
 # Parametrize each output with a relative path and optionally any values to override
 [output.".ctt/defaults"]
 _extra_tasks = [
-  "! ls .secrets.yaml",
+  "ls .secrets.yaml",
   "docker compose down",
 ]
 
