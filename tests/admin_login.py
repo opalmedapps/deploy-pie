@@ -18,6 +18,8 @@ def main(admin_password: str):
         },
         timeout=5,
         allow_redirects=False,
+        # during CI there won't be a valid cert
+        verify=False,  # noqa: S501
     )
 
     if not response.ok:
