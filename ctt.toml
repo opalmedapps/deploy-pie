@@ -18,11 +18,13 @@ _extra_tasks = [
 # Parametrize each output with a relative path and optionally any values to override
 [output.".ctt/defaults"]
 _extra_tasks = [
-  "! ls .secrets.yaml.jinja"
+  "! ls .secrets.yaml",
+  "docker compose down",
 ]
 
 [output.".ctt/no_test"]
 is_test = false
 _extra_tasks = [
-  "! ls .secrets.yaml.jinja"
+  "! ls .secrets.yaml",
+  "docker compose down",
 ]
