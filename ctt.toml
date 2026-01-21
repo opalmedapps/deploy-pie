@@ -2,7 +2,7 @@
 # Note that the copier.yml defaults are used whenever the key is not set in this file
 [defaults]
 project_name = "test"
-extra_files = "/Users/mschoettle/Documents/Development/oss/opalmedapps/deploy-pie/.ctt/extra"
+extra_files = "/home/runner/work/deploy-pie/deploy-pie/.ctt/extra"
 environment = "test"
 certificate_type = "letsencrypt"
 # required for letsencrypt
