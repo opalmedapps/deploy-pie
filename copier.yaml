@@ -282,6 +282,7 @@ _tasks:
     when: "{{ db_host_type != 'container' and is_port_available(db_port, db_host) }}"
   # validation succeeded
   - "echo Copying extra files into project directory..."
+  - mkdir -p config/firebase
   - "{{ _copier_python }} scripts/copy_file.py {{ extra_files }}/firebase-admin-key.json config/firebase/service-account.json --chmod 0644"
   - command: "{{ _copier_python }} scripts/copy_file.py {{ extra_files }}/db-certs.crt certs/db-certs.crt --chmod 0644"
     when: "{{ use_custom_certs }}"

@@ -15,13 +15,14 @@ _extra_tasks = [
   "docker compose down",
 ]
 
-# Parametrize each output with a relative path and optionally any values to override
+# ensure that the secrets file is included during test
 [output.".ctt/defaults"]
 _extra_tasks = [
   "ls .secrets.yaml",
   "docker compose down",
 ]
 
+# the secrets file is excluded
 [output.".ctt/no_test"]
 is_test = false
 _extra_tasks = [
