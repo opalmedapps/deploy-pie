@@ -17,6 +17,7 @@ def main(admin_password: str):
             'password': admin_password,
         },
         timeout=5,
+        allow_redirects=False,
     )
 
     if not response.ok:

@@ -12,10 +12,12 @@ accessLog:
 entryPoints:
   web:
     address: ":80"
+    {% if not is_test -%}
     http:
       redirections:
         entrypoint:
           to: web-secure
+    {%- endif %}
   web-secure:
     address: ":443"
     {% if certificate_type == "letsencrypt" -%}
