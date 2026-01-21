@@ -37,5 +37,9 @@ jobs:
         with:
           # renovate: datasource=pypi dependency=uv
           version: "0.9.26"
-      - run: |
+      - name: Test template using copier-template-tester
+        run: |
           uv run --with copier --with copier-templates-extensions --with bcrypt --with copier-template-tester ctt
+      - name: Stop all containers
+        run: |
+          docker stop "$(docker ps -aq)"
