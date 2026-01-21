@@ -343,7 +343,6 @@ _exclude:
   # default
   - copier.yaml
   - copier.yml
-  - "{% if not is_test %}.secrets.yaml{% endif %}"
   - "~*"
   - "*.py[co]"
   - "__pycache__"
