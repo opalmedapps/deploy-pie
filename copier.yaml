@@ -360,3 +360,4 @@ _exclude:
   - "zizmor.yml"
   # - "README.md"
   - extensions
+  - "{% if not is_test %}tests{% endif %}"

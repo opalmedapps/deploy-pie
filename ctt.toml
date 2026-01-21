@@ -19,13 +19,14 @@ _extra_tasks = [
 [output.".ctt/defaults"]
 _extra_tasks = [
   "uv run tests/admin_login.py {{ admin_password }}",
+  "uv run tests/labs_login.py {{ labs_password }}",
   "docker compose down",
 ]
 
-# the secrets file is excluded
+# the tests are excluded
 [output.".ctt/no_test"]
 is_test = false
 _extra_tasks = [
-  "! ls .secrets.yaml",
+  "! ls tests",
   "docker compose down",
 ]
