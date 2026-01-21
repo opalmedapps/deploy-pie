@@ -11,7 +11,7 @@ import typer
 
 def main(labs_password: str):
     response = requests.post(
-        'http://localhost/opalAdmin/user/validate-login',
+        'http://localhost/opalAdmin/user/system-login',
         data={
             'username': 'interface-engine',
             'password': labs_password,
@@ -23,10 +23,10 @@ def main(labs_password: str):
     )
 
     if not response.ok:
-        print(f'Labs login failed: {response.status_code} {response.text}')
+        print(f'System user login failed: {response.status_code} {response.text}')
         raise typer.Exit(code=1)
 
-    print('Labs login succeeded')
+    print('System user login succeeded')
 
 
 if __name__ == '__main__':
