@@ -11,6 +11,9 @@ db_host_type = "container"
 firebase_project_name = "test"
 app_id = "com.hig.test"
 domain_registration = "registration.opalmedapps.ca"
+_extra_tasks = [
+  "docker compose down",
+]
 
 # Parametrize each output with a relative path and optionally any values to override
 [output.".ctt/defaults"]
