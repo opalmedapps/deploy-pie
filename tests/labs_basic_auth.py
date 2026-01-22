@@ -13,8 +13,10 @@ import typer
 
 
 def main(labs_password: str):
+    print(requests.get('http://localhost/opalAdmin/').status_code)  # noqa: S113
+    print(requests.get('http://localhost/opalAdmin/').headers)  # noqa: S113
     response = requests.post(
-        'https://opalmedapps.dev:444/opalAdmin/labs/api/processLabForPatient.php',
+        'http://localhost/opalAdmin/labs/api/processLabForPatient.php',
         auth=('interface-engine', labs_password),
         data=json.dumps({
             'mrn': 'test',
@@ -26,6 +28,8 @@ def main(labs_password: str):
         # during CI there won't be a valid cert
         verify=False,  # noqa: S501
     )
+
+    print(response.status_code, response.headers)
 
     if (
         response.status_code == HTTPStatus.BAD_REQUEST
