@@ -21,6 +21,11 @@ _extra_tasks = [
   "uv run tests/admin_login.py {{ admin_password }}",
   "uv run tests/system_user_login.py {{ labs_password }}",
   "uv run tests/labs_basic_auth.py {{ labs_password }}",
+  "uv run tests/validate_token.py admin_token {{ admin_token }}",
+  "uv run tests/validate_token.py listener_token {{ listener_token }}",
+  "uv run tests/validate_token.py listener_registration_token {{ listener_registration_token }}",
+  "uv run tests/validate_token.py interface_engine_token {{ interface_engine_token }}",
+  "scripts/refresh_data.sh OMI",
   "docker compose down",
 ]
 
@@ -31,3 +36,7 @@ _extra_tasks = [
   "! ls tests",
   "docker compose down",
 ]
+
+# DB on same host
+[output.".ctt/db_same_host"]
+db_host_type = "same_server"

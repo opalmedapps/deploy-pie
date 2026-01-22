@@ -10,10 +10,8 @@ import typer
 
 
 def main(admin_password: str):
-    print(requests.get('http://localhost/opalAdmin/', verify=False).status_code)  # noqa: S113, S501
-    print(requests.get('http://localhost/opalAdmin/', verify=False).headers)  # noqa: S113, S501
     response = requests.post(
-        'http://localhost/opalAdmin/user/validate-login',
+        'https://localhost/opalAdmin/user/validate-login',
         data={
             'username': 'admin',
             'password': admin_password,

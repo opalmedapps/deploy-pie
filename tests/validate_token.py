@@ -9,12 +9,11 @@ import requests
 import typer
 
 
-def main(labs_password: str):
-    response = requests.post(
-        'https://localhost/opalAdmin/user/system-login',
-        data={
-            'username': 'interface-engine',
-            'password': labs_password,
+def main(name: str, token: str):
+    response = requests.get(
+        'https://localhost/api/auth/user/',
+        headers={
+            'Authorization': f'Token {token}',
         },
         timeout=5,
         allow_redirects=False,
@@ -23,10 +22,10 @@ def main(labs_password: str):
     )
 
     if not response.ok:
-        print(f'System user login failed: {response.status_code} {response.text}')
+        print(f'Token with name {name} is invalid: {response.status_code} {response.text}')
         raise typer.Exit(code=1)
 
-    print('System user login succeeded')
+    print(f'Token with name {name} is valid')
 
 
 if __name__ == '__main__':
