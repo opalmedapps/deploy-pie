@@ -20,6 +20,7 @@ _extra_tasks = [
 _extra_tasks = [
   "uv run tests/admin_login.py {{ admin_password }}",
   "uv run tests/system_user_login.py {{ labs_password }}",
+  "uv run tests/labs_basic_auth.py {{ labs_password }}",
   "docker compose down",
 ]
 
