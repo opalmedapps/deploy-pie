@@ -13,8 +13,8 @@ import typer
 
 
 def main(labs_password: str):
-    print(requests.get('http://localhost/opalAdmin/').status_code)  # noqa: S113
-    print(requests.get('http://localhost/opalAdmin/').headers)  # noqa: S113
+    print(requests.get('http://localhost/opalAdmin/', verify=False).status_code)  # noqa: S113, S501
+    print(requests.get('http://localhost/opalAdmin/', verify=False).headers)  # noqa: S113, S501
     response = requests.post(
         'http://localhost/opalAdmin/labs/api/processLabForPatient.php',
         auth=('interface-engine', labs_password),
