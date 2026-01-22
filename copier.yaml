@@ -162,6 +162,12 @@ institution_code:
   default: o4
   validator: "{% if institution_code | length != 2 %}Must be exactly two characters{% endif %}"
 
+fallback_language:
+  type: str
+  help: What language should be used as a fallback for health data in the app, when the user's chosen language is not available? Provide a two-letter ISO 639-1 code in uppercase.
+  default: EN
+  validator: "{% if fallback_language | length != 2 %}Must be exactly two characters{% endif %}"
+
 app_id:
   type: str
   help: The app ID of the iOS app
