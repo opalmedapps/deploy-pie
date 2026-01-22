@@ -104,7 +104,7 @@ See our documentation on how to [retrieve the Apple Push Notification certificat
 Run the following command:
 
 ```shell
-uvx --python ">=3.12" --with copier-templates-extensions --with bcrypt \
+uv run --python ">=3.12" --with copier==9.11.0 --with copier-templates-extensions --with bcrypt \
     copier copy --trust git+https://github.com/opalmedapps/deploy-pie.git <target-directory>
 ```
 
@@ -268,14 +268,14 @@ Some questions are conditional based on your answer to a previous question.
 Run the following command from within the project directory:
 
 ```shell
-uvx --python ">=3.12" --with copier-templates-extensions --with bcrypt \
+uv run --python ">=3.12" --with copier==9.11.0 --with copier-templates-extensions --with bcrypt \
     copier update --trust --skip-tasks --skip-answered
 ```
 
 ## Testing
 
 ```shell
-uvx --python ">=3.12" --with copier-templates-extensions --with bcrypt copier copy --trust --vcs-ref=update-readme --no-cleanup git+https://github.com/opalmedapps/deploy-pie.git
+uv run --python ">=3.12" --with copier==9.11.0 --with copier-templates-extensions --with bcrypt copier copy --trust --vcs-ref=update-readme --no-cleanup git+https://github.com/opalmedapps/deploy-pie.git
 ```
 
 During generation:
