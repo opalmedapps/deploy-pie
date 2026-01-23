@@ -25,7 +25,9 @@ _extra_tasks = [
   "uv run tests/validate_token.py listener_token {{ listener_token }}",
   "uv run tests/validate_token.py listener_registration_token {{ listener_registration_token }}",
   "uv run tests/validate_token.py interface_engine_token {{ interface_engine_token }}",
-  "docker compose run --rm db-management db_management/enable_test_mode.sh",
+  # need to set legacy DBs to test mode so that refresh_data script can run
+  "docker compose run --rm db-management python -m db_management.run_sql_scripts OpalDB db_management/opaldb/data/test/testmode/",
+  "docker compose run --rm db-management python -m db_management.run_sql_scripts QuestionnaireDB db_management/questionnairedb/data/test/testmode/",
   "scripts/refresh_data.sh OMI",
   "docker compose down",
 ]
