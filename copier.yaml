@@ -286,10 +286,6 @@ _tasks:
       echo DB port {{ db_port }} on {{ db_host }} is not reachable
       exit 1
     when: "{{ db_host_type != 'container' and is_port_available(db_port, db_host) }}"
-  - "echo Troubleshooting..."
-  - "docker compose config db"
-  - "cat compose.yaml"
-  - "echo {{ db_root_password }}"
   # validation succeeded
   - "echo Copying extra files into project directory..."
   - mkdir -p config/firebase

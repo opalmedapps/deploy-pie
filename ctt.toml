@@ -15,7 +15,6 @@ _extra_tasks = [
   "docker compose down",
 ]
 
-# ensure that the secrets file is included during test
 [output.".ctt/defaults"]
 _extra_tasks = [
   "uv run tests/admin_login.py '{{ admin_password }}'",
