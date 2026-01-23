@@ -41,6 +41,6 @@ _extra_tasks = [
 ]
 
 # DB on same host
-[output.".ctt/db_same_host"]
-db_host_type = "separate_server"
-db_root_password = "root-password"
+# [output.".ctt/db_same_host"]
+# db_host_type = "separate_server"
+# db_root_password = "root-password"
