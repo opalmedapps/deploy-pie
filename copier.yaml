@@ -4,7 +4,7 @@ run_setup:
   default: "{{ performed_copy is not defined or not performed_copy }}"
   when: false
 
-# only used for testing via copier-template-tester to get a secrets file
+# only used for testing via copier-template-tester
 is_test:
   type: bool
   default: false
