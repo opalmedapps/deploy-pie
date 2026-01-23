@@ -1,6 +1,8 @@
 tmp/
 generated/
 
+.ctt/
+
 certs/*
 config/firebase/
 config/traefik/certs/

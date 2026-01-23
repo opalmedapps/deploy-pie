@@ -1,0 +1,45 @@
+# https://copier-template-tester.kyleking.me/#configuration-file
+# minimal defaults required to generate a project
+[defaults]
+is_test = true
+project_name = "test"
+extra_files = "/home/runner/work/deploy-pie/deploy-pie/.ctt/extra"
+certificate_type = "letsencrypt"
+# required for letsencrypt
+admin_email = "test"
+db_host_type = "container"
+firebase_project_name = "test"
+app_id = "com.hig.test"
+domain_registration = "registration.opalmedapps.ca"
+_extra_tasks = [
+  "docker compose down",
+]
+
+[output.".ctt/defaults"]
+_extra_tasks = [
+  "uv run tests/admin_login.py '{{ admin_password }}'",
+  "uv run tests/system_user_login.py '{{ labs_password }}'",
+  "uv run tests/labs_basic_auth.py '{{ labs_password }}'",
+  "uv run tests/validate_token.py admin_token {{ admin_token }}",
+  "uv run tests/validate_token.py listener_token {{ listener_token }}",
+  "uv run tests/validate_token.py listener_registration_token {{ listener_registration_token }}",
+  "uv run tests/validate_token.py interface_engine_token {{ interface_engine_token }}",
+  # need to set legacy DBs to test mode so that refresh_data script can run
+  "docker compose run --rm db-management python -m db_management.run_sql_scripts OpalDB db_management/opaldb/data/test/testmode/",
+  "docker compose run --rm db-management python -m db_management.run_sql_scripts QuestionnaireDB db_management/questionnairedb/data/test/testmode/",
+  "scripts/refresh_data.sh OMI",
+  "docker compose down",
+]
+
+# the tests are excluded
+[output.".ctt/no_test"]
+is_test = false
+_extra_tasks = [
+  "! ls tests",
+  "docker compose down",
+]
+
+# DB on same host
+# [output.".ctt/db_same_host"]
+# db_host_type = "separate_server"
+# db_root_password = "root-password"
