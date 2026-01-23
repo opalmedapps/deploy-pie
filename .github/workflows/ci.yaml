@@ -28,16 +28,14 @@ jobs:
       - uses: pre-commit/action@v3.0.1
   test:
     runs-on: ubuntu-latest
-    env:
-      DB_ROOT_PASSWORD: "root-password"
-    # services:
-    #   external-db:
-    #     image: mariadb:10.11.15-jammy
-    #     ports:
-    #       - 3307:3306
-    #       - 8306:3306
-    #     env:
-    #       MARIADB_ROOT_PASSWORD: ${{ env.DB_ROOT_PASSWORD }}
+    services:
+      external-db:
+        image: mariadb:10.11.15-jammy
+        ports:
+          - 3307:3306
+          - 8306:3306
+        env:
+          MARIADB_ROOT_PASSWORD: root-password
     steps:
       - uses: actions/checkout@v6.0.1
         with:
