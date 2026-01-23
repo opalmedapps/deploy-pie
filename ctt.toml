@@ -18,9 +18,9 @@ _extra_tasks = [
 # ensure that the secrets file is included during test
 [output.".ctt/defaults"]
 _extra_tasks = [
-  "uv run tests/admin_login.py {{ admin_password }}",
-  "uv run tests/system_user_login.py {{ labs_password }}",
-  "uv run tests/labs_basic_auth.py {{ labs_password }}",
+  "uv run tests/admin_login.py '{{ admin_password }}'",
+  "uv run tests/system_user_login.py '{{ labs_password }}'",
+  "uv run tests/labs_basic_auth.py '{{ labs_password }}'",
   "uv run tests/validate_token.py admin_token {{ admin_token }}",
   "uv run tests/validate_token.py listener_token {{ listener_token }}",
   "uv run tests/validate_token.py listener_registration_token {{ listener_registration_token }}",
