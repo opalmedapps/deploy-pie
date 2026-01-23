@@ -104,7 +104,7 @@ See our documentation on how to [retrieve the Apple Push Notification certificat
 Run the following command:
 
 ```shell
-uvx --python ">=3.12" --with copier-templates-extensions --with bcrypt \
+uv run --python ">=3.12" --with copier==9.11.0 --with copier-templates-extensions --with bcrypt \
     copier copy --trust git+https://github.com/opalmedapps/deploy-pie.git <target-directory>
 ```
 
@@ -239,6 +239,17 @@ Some questions are conditional based on your answer to a previous question.
 
     You can leave the proposed default if only one institution is supported.
 
+1. **What language should be used as a fallback for health data in the app?**
+
+    This value should be a two-letter ISO 639-1 code in uppercase.
+
+    The Opal app UI supports more languages than the backend,
+    which currently expects health data only in English or French.
+    When an app user sets their app to another language (for example, German),
+    a fallback language must be configured to return health data to the app.
+
+    For example, if this value is set to 'EN', a user using the app in German will see their diagnoses in English.
+
 1. **The app ID of the iOS app**
 
     The unique app bundle identifier of the iOS app.
@@ -257,14 +268,14 @@ Some questions are conditional based on your answer to a previous question.
 Run the following command from within the project directory:
 
 ```shell
-uvx --python ">=3.12" --with copier-templates-extensions --with bcrypt \
+uv run --python ">=3.12" --with copier==9.11.0 --with copier-templates-extensions --with bcrypt \
     copier update --trust --skip-tasks --skip-answered
 ```
 
 ## Testing
 
 ```shell
-uvx --python ">=3.12" --with copier-templates-extensions --with bcrypt copier copy --trust --vcs-ref=update-readme --no-cleanup git+https://github.com/opalmedapps/deploy-pie.git
+uv run --python ">=3.12" --with copier==9.11.0 --with copier-templates-extensions --with bcrypt copier copy --trust --vcs-ref=update-readme --no-cleanup git+https://github.com/opalmedapps/deploy-pie.git
 ```
 
 During generation:

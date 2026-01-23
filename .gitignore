@@ -11,3 +11,5 @@ artifacts/
 compose.override.yaml
 
 __pycache__
+
+.idea

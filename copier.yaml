@@ -1,7 +1,7 @@
 run_setup:
   # computed value to determine whether to prompt the setup questions
   type: bool
-  default: "{{ performed_copy is not defined or performed_copy is false }}"
+  default: "{{ performed_copy is not defined or not performed_copy }}"
   when: false
 
 # only used for testing via copier-template-tester to get a secrets file
@@ -168,6 +168,12 @@ institution_code:
   help: The 2 character unique institution code
   default: o4
   validator: "{% if institution_code | length != 2 %}Must be exactly two characters{% endif %}"
+
+fallback_language:
+  type: str
+  help: What language should be used as a fallback for health data in the app, when the user's chosen language is not available? Provide a two-letter ISO 639-1 code in uppercase.
+  default: EN
+  validator: "{% if fallback_language | length != 2 %}Must be exactly two characters{% endif %}"
 
 app_id:
   type: str
