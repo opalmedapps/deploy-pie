@@ -47,7 +47,8 @@ docker compose run --rm db-management python -m db_management.run_sql_scripts Op
 docker compose run --rm db-management python -m db_management.run_sql_scripts OpalDB db_management/opaldb/data/test/
 docker compose run --rm db-management python -m db_management.run_sql_scripts OpalDB db_management/opaldb/data/test/$institution_lower/
 docker compose run --rm db-management python -m db_management.run_sql_scripts OpalDB db_management/opaldb/data/test/notifications/
-docker compose run --rm db-management db_management/enable_test_mode.sh
+docker compose run --rm db-management python -m db_management.run_sql_scripts OpalDB db_management/opaldb/data/test/testmode/
+docker compose run --rm db-management python -m db_management.run_sql_scripts QuestionnaireDB db_management/questionnairedb/data/test/testmode/
 
 docker compose exec admin cat opal/core/management/commands/files/initialize_firebase_users.js | docker compose exec --no-TTY listener node
 docker compose exec admin python manage.py find_deviations
