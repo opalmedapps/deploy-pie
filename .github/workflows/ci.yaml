@@ -31,10 +31,10 @@ jobs:
     env:
       DB_ROOT_PASSWORD: "root-password"
     services:
-      db:
+      external-db:
         image: mariadb:10.11.15-jammy
         ports:
-          - 3306:3306
+          - 3307:3306
           - 8306:3306
         env:
           MARIADB_ROOT_PASSWORD: ${{ env.DB_ROOT_PASSWORD }}
