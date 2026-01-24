@@ -8,9 +8,9 @@ WAIT_FOR_IT_VERSION="latest"
 echo "Waiting for DB container to be ready..."
 docker run --rm -i --network opal-${ENVIRONMENT} --add-host "host.docker.internal:host-gateway" alpine sh -s << EOF
 apk add --no-cache iputils-ping
-ping host.docker.internal
-ping external-db
-ping external-db
+ping -c 4 host.docker.internal
+ping -c 4 external-db
+ping -c 4 external-db
 EOF
 docker run --rm -i --network opal-${ENVIRONMENT} chainguard/wait-for-it:${WAIT_FOR_IT_VERSION} --host="$DB_HOST" --port="$DB_PORT" --timeout=20
 
