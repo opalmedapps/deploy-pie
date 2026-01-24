@@ -26,6 +26,7 @@ extra_files:
   type: str
   help: Where are the extra files located (absolute path)?
   when: "{{ run_setup }}"
+  # needs to be absolute because the tasks are run in the context of the target directory
   validator: |
     {% if run_setup %}
     {% if extra_files | length < 1 %}Required{% endif %}
@@ -97,10 +98,11 @@ db_host:
   validator: "{% if db_host | length < 1 %}Required{% endif %}"
 
 db_port:
-  type: int
+  type: str
   help: Port the DB server is listening at
   when: "{{ db_host_type != 'container' }}"
-  default: 3306
+  placeholder: "3306"
+  validator: "{% if db_port | int < 1 %}Invalid input{% endif %}"
 
 db_user:
   type: str
@@ -126,6 +128,7 @@ db_root_password:
   type: str
   help: Password of the database root user
   secret: true
+  # currently broken: default value is an empty string which is not validated
   default: |-
     {% if db_host_type == "container" -%}
       {{ existing_secret('.env', 'DB_ROOT_PASSWORD') or random_password(32) }}
@@ -283,9 +286,9 @@ _tasks:
       exit 1
     when: "{{ not is_port_available(https_port) }}"
   - command: |
-      echo DB port {{ db_port }} on {{ db_host }} is not reachable
+      echo DB port {{ db_port }} on localhost is not reachable
       exit 1
-    when: "{{ db_host_type != 'container' and is_port_available(db_port, db_host) }}"
+    when: "{{ db_host_type == 'same_server' and is_port_available(db_port | int, 'localhost') }}"
   # validation succeeded
   - "echo Copying extra files into project directory..."
   - mkdir -p config/firebase

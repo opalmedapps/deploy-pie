@@ -41,5 +41,6 @@ _extra_tasks = [
 
 # DB on same host
 [output.".ctt/db_same_host"]
-db_host_type = "same-server"
+db_host_type = "same_server"
+db_port = 3307
 db_root_password = "root-password"
