@@ -18,7 +18,7 @@ def is_port_available(port: int, host: str = 'localhost') -> bool:
         else:
             print(f'Port {port} on host {host} is closed (available)')
 
-        return sock.connect_ex((host, port)) != 0
+        return return_code != 0
 
 
 class NetworkExtension(Extension):
