@@ -323,6 +323,10 @@ _tasks:
       docker compose up -d db
       echo "Waiting for DB container to be ready..."
     when: "{{ db_host_type == 'container' }}"
+  # force the creation of the network so that the init_db script can find it
+  - command: |
+      docker compose create admin
+    when: "{{ db_host_type != 'container' }}"
   # set up the databases
   - command: |
       echo "Running init_db script to initialize DB..."
