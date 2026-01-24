@@ -6,6 +6,11 @@ ALPINE_VERSION="3.23.2"
 WAIT_FOR_IT_VERSION="latest"
 
 echo "Waiting for DB container to be ready..."
+docker run --rm -i --network opal-${ENVIRONMENT} alpine sh -s << EOF
+apk add --no-cache iputils-ping
+ping host.docker.internal
+ping external-db
+EOF
 docker run --rm -i --network opal-${ENVIRONMENT} chainguard/wait-for-it:${WAIT_FOR_IT_VERSION} --host="$DB_HOST" --port="$DB_PORT" --timeout=20
 
 echo "Running container for mysql-client..."
