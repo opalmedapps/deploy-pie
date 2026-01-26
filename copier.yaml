@@ -92,18 +92,23 @@ db_host:
       host.docker.internal
     {%- else -%}
       {#- Force the user to type a host -#}
-
+      {{ UNSET }}
     {%- endif %}
   when: "{{ db_host_type == 'separate_server' }}"
   # currently won't work with validator: https://github.com/copier-org/copier/issues/2475
-  # validator: "{% if db_host | length < 1 %}Required{% endif %}"
+  validator: "{% if db_host | length < 1 %}Required{% endif %}"
 
 db_port:
-  type: str
+  type: int
   help: Port the DB server is listening at
   when: "{{ db_host_type != 'container' }}"
-  placeholder: "3306"
-  validator: "{% if db_port | int < 1 %}Invalid input{% endif %}"
+  default: |-
+    {% if db_host_type == 'container' %}
+      3306
+    {%- else -%}
+    {{ UNSET }}
+    {%- endif %}
+  validator: "{% if db_port < 1 %}Invalid input{% endif %}"
 
 db_user:
   type: str
