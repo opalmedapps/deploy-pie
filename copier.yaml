@@ -95,7 +95,6 @@ db_host:
       {{ UNSET }}
     {%- endif %}
   when: "{{ db_host_type == 'separate_server' }}"
-  # currently won't work with validator: https://github.com/copier-org/copier/issues/2475
   validator: "{% if db_host | length < 1 %}Required{% endif %}"
 
 db_port:
