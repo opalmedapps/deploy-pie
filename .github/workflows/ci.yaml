@@ -53,6 +53,7 @@ jobs:
           version: "0.9.26"
       - name: Test template using copier-template-tester
         run: |
+          apk add --no-cache bind-tools
           cat /etc/hosts
           DB_IP=$(dig +short external-db)
           echo "$DB_IP external-db" >> /etc/hosts
