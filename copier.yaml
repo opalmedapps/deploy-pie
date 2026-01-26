@@ -139,7 +139,6 @@ db_root_password:
   type: str
   help: Password of the database root user
   secret: true
-  # currently broken: default value is an empty string which is not validated
   default: |-
     {% if db_host_type == "container" -%}
       {{ existing_secret('.env', 'DB_ROOT_PASSWORD') or random_password(32) }}
