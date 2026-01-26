@@ -39,8 +39,9 @@ jobs:
     # https://docs.github.com/en/actions/tutorials/use-containerized-services/use-docker-service-containers#running-jobs-in-a-container
     container:
       image: docker:29
-      volumes:
-        - /var/run/docker.sock:/var/run/docker.sock
+      # volumes:
+        # - /var/run/docker.sock:/var/run/docker.sock
+      options: "--add-host external-db:host-gateway"
     steps:
       - uses: actions/checkout@v6.0.1
         with:
@@ -52,6 +53,7 @@ jobs:
           version: "0.9.26"
       - name: Test template using copier-template-tester
         run: |
+          cat /etc/hosts
           docker container ps
           docker network ls
           ping -c 4 external-db
