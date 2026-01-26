@@ -126,7 +126,12 @@ db_password:
 db_root_user:
   type: str
   help: Username of a database root user (to create user and databases)
-  default: root
+  default: |-
+    {% if db_host_type == 'container' %}
+      root
+    {%- else -%}
+    {{ UNSET }}
+    {%- endif %}
   when: "{{ db_host_type != 'container'}}"
   validator: "{% if db_root_user | length < 1 %}Required{% endif %}"
 
@@ -140,7 +145,7 @@ db_root_password:
       {{ existing_secret('.env', 'DB_ROOT_PASSWORD') or random_password(32) }}
     {%- else -%}
       {#- Force the user to type a password -#}
-
+      {{ UNSET }}
     {%- endif %}
   validator: "{% if db_root_password | length < 1 %}Required{% endif %}"
   when: "{{ db_host_type != 'container'}}"
