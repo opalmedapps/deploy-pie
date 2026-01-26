@@ -49,6 +49,9 @@ _extra_tasks = [
 # DB on a different server requires a db_host
 [output.".ctt/db_different_server"]
 db_host_type = "separate_server"
+# use the service container to pretend it is a separate server
+# very tricky to test in CI with a dedicated hostname
+db_host = "host.docker.internal"
 db_port = 3307
 db_root_user = "root"
 db_root_password = "root-password"
