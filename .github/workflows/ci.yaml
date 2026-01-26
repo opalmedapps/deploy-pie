@@ -54,6 +54,9 @@ jobs:
       - name: Test template using copier-template-tester
         run: |
           cat /etc/hosts
+          DB_IP=$(dig +short external-db)
+          echo "$DB_IP external-db" >> /etc/hosts
+          cat /etc/hosts
           docker container ps
           docker network ls
           ping -c 4 external-db
