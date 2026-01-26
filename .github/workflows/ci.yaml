@@ -37,7 +37,7 @@ jobs:
         env:
           MARIADB_ROOT_PASSWORD: root-password
     # https://docs.github.com/en/actions/tutorials/use-containerized-services/use-docker-service-containers#running-jobs-in-a-container
-    container: docker
+    container: docker:dind
     steps:
       - uses: actions/checkout@v6.0.1
         with:
