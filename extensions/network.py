@@ -11,7 +11,14 @@ def is_port_available(port: int, host: str = 'localhost') -> bool:
     print(f'Checking availability of port {port} on host {host}...')
 
     with closing(socket.socket(socket.AF_INET, socket.SOCK_STREAM)) as sock:
-        return sock.connect_ex((host, port)) != 0
+        return_code = sock.connect_ex((host, port))
+
+        if return_code == 0:
+            print(f'Port {port} on host {host} is open (not available)')
+        else:
+            print(f'Port {port} on host {host} is closed (available)')
+
+        return return_code != 0
 
 
 class NetworkExtension(Extension):
