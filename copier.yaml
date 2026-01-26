@@ -103,7 +103,7 @@ db_port:
   help: Port the DB server is listening at
   when: "{{ db_host_type != 'container' }}"
   default: |-
-    {% if db_host_type == 'container' %}
+    {% if db_host_type == 'container' -%}
       3306
     {%- else -%}
     {{ UNSET }}
@@ -127,7 +127,7 @@ db_root_user:
   type: str
   help: Username of a database root user (to create user and databases)
   default: |-
-    {% if db_host_type == 'container' %}
+    {% if db_host_type == 'container' -%}
       root
     {%- else -%}
     {{ UNSET }}
