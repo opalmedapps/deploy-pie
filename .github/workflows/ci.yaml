@@ -41,7 +41,7 @@ jobs:
       image: docker:29
       # volumes:
         # - /var/run/docker.sock:/var/run/docker.sock
-      options: "--add-host external-db:host-gateway"
+      # options: "--add-host external-db:host-gateway"
     steps:
       - uses: actions/checkout@v6.0.1
         with:
