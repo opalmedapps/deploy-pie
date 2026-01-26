@@ -39,7 +39,6 @@ jobs:
     # https://docs.github.com/en/actions/tutorials/use-containerized-services/use-docker-service-containers#running-jobs-in-a-container
     container:
       image: docker:29
-      options: "--add-host external-db:172.18.0.3"
     steps:
       - uses: actions/checkout@v6.0.1
         with:
@@ -52,14 +51,7 @@ jobs:
       - name: Test template using copier-template-tester
         run: |
           apk add --no-cache bind-tools
-          cat /etc/hosts
-          DB_IP=$(dig +short external-db)
-          echo "$DB_IP external-db" >> /etc/hosts
-          cat /etc/hosts
-          docker container ps
-          docker network ls
-          ping -c 4 external-db
-          docker run --rm --interactive alpine sh -c "apk add --no-cache iputils-ping && ping -c 4 external-db && exit 1"
+          # DB_IP=$(dig +short external-db)
           uv run --with copier --with copier-templates-extensions --with bcrypt --with copier-template-tester ctt
       - name: Show running containers
         run: |
