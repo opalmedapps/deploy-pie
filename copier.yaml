@@ -264,8 +264,13 @@ _tasks:
   # validation
   - "echo Checking that the compose file has no warnings"
   - command: |
-      docker compose config --quiet
-      docker compose config --quiet 2>&1 | grep --invert warning
+      if docker compose config --quiet 2>&1 | grep --quiet level=; then
+        echo compose config has errors or warnings
+        docker compose config --quiet 2>&1
+        exit 1
+      else
+          echo compose config has no errors or warnings
+      fi
   - "echo Checking that required files are provided"
   - command: |
       echo Firebase admin key missing at {{ extra_files + '/firebase-admin-key.json' }}
