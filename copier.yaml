@@ -175,6 +175,11 @@ use_ofelia:
   help: Do you want to use Ofelia as a job scheduler to run period jobs?
   default: true
 
+use_orms:
+  type: bool
+  help: Do you want to use the room management component (ORMS)?
+  default: false
+
 firebase_project_name:
   type: str
   help: The Firebase project name
@@ -400,5 +405,7 @@ _exclude:
   - "zizmor.yml"
   # - "README.md"
   - extensions
+  - "{% if not use_orms %}compose.orms.yaml{% endif %}"
+  - "{% if not use_ofelia %}compose.ofelia.yaml{% endif %}"
   - "{% if not is_test %}scripts/cleanup_db.sh{% endif %}"
   - "{% if not is_test %}tests{% endif %}"

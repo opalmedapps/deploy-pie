@@ -17,6 +17,7 @@ _extra_tasks = [
 
 [output.".ctt/defaults"]
 _extra_tasks = [
+  "! ls compose.orms.yaml",
   "uv run tests/admin_login.py '{{ admin_password }}'",
   "uv run tests/system_user_login.py '{{ labs_password }}'",
   "uv run tests/labs_basic_auth.py '{{ labs_password }}'",
@@ -64,3 +65,11 @@ db_root_password = "root-password"
 # TODO: add test case with TLS enabled
 db_use_tls = 0
 use_custom_certs = false
+
+# orms enabled
+[output.".ctt/orms_enabled"]
+use_orms = true
+_extra_tasks = [
+  "ls compose.orms.yaml",
+  "docker compose down",
+]
