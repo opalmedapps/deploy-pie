@@ -36,9 +36,6 @@ jobs:
           - 3307:3306
         env:
           MARIADB_ROOT_PASSWORD: root-password
-    # https://docs.github.com/en/actions/tutorials/use-containerized-services/use-docker-service-containers#running-jobs-in-a-container
-    # container:
-      # image: docker:29
     steps:
       - uses: actions/checkout@v6.0.1
         with:
@@ -50,8 +47,6 @@ jobs:
           version: "0.9.26"
       - name: Test template using copier-template-tester
         run: |
-          # apk add --no-cache bind-tools
-          # DB_IP=$(dig +short external-db)
           uv run --with copier --with copier-templates-extensions --with bcrypt --with copier-template-tester ctt
       - name: Show running containers
         run: |
