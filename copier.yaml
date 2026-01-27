@@ -257,6 +257,9 @@ _message_after_copy: |
 
 _tasks:
   # validation
+  - "echo Checking that the compose file has no warnings"
+  # - command: |
+      # docker compose config --quiet 2>&1 | grep --invert warning
   - "echo Checking that required files are provided"
   - command: |
       echo Firebase admin key missing at {{ extra_files + '/firebase-admin-key.json' }}

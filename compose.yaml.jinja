@@ -57,7 +57,7 @@ services:
     {% if db_host_type == "container" -%}
     depends_on:
       - db
-    {%- elif db_host_type == "same_server" -%}
+    {%- elif db_host_type == "same_server" or is_test -%}
     extra_hosts:
       - "host.docker.internal:host-gateway"
     {%- endif %}
@@ -98,7 +98,7 @@ services:
     {% if db_host_type == "container" -%}
     depends_on:
       - db
-    {%- elif db_host_type == "same_server" -%}
+    {%- elif db_host_type == "same_server" or is_test -%}
     extra_hosts:
       - "host.docker.internal:host-gateway"
     {%- endif %}
@@ -135,7 +135,7 @@ services:
     {% if db_host_type == "container" -%}
     depends_on:
       - db
-    {%- elif db_host_type == "same_server" -%}
+    {%- elif db_host_type == "same_server" or is_test -%}
     extra_hosts:
       - "host.docker.internal:host-gateway"
     {%- endif %}
@@ -170,7 +170,7 @@ services:
     {% if db_host_type == "container" -%}
     depends_on:
       - db
-    {%- elif db_host_type == "same_server" -%}
+    {%- elif db_host_type == "same_server" or is_test -%}
     extra_hosts:
       - "host.docker.internal:host-gateway"
     {%- endif %}
