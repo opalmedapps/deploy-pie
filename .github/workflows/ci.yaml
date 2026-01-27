@@ -15,14 +15,43 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || '' }}
   cancel-in-progress: true
 
+permissions:
+  contents: read
 
 jobs:
   lint:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
     steps:
-      - uses: actions/checkout@v6.0.1
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
           persist-credentials: false
-      - uses: pre-commit/action@v3.0.1
+      - uses: j178/prek-action@9d6a3097e0c1865ecce00cfb89fe80f2ee91b547 # v1.0.12
+        with:
+          # renovate: datasource=pypi dependency=prek
+          prek-version: "0.3.0"
+  test:
+    runs-on: ubuntu-latest
+    services:
+      # simulate a separate DB server
+      external-db:
+        image: mariadb:10.11.15-jammy
+        ports:
+          - 3307:3306
+        env:
+          MARIADB_ROOT_PASSWORD: root-password
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
+      - uses: astral-sh/setup-uv@61cb8a9741eeb8a550a1b8544337180c0fc8476b # v7.2.0
+        id: setup-uv
+        with:
+          # renovate: datasource=pypi dependency=uv
+          version: "0.9.26"
+      - name: Test template using copier-template-tester
+        run: |
+          docker container ps
+          uv run --with copier --with copier-templates-extensions --with bcrypt --with copier-template-tester ctt
+      - name: Show running containers
+        run: |
+          docker ps

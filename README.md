@@ -239,6 +239,17 @@ Some questions are conditional based on your answer to a previous question.
 
     You can leave the proposed default if only one institution is supported.
 
+1. **What language should be used as a fallback for health data in the app?**
+
+    This value should be a two-letter ISO 639-1 code in uppercase.
+
+    The Opal app UI supports more languages than the backend,
+    which currently expects health data only in English or French.
+    When an app user sets their app to another language (for example, German),
+    a fallback language must be configured to return health data to the app.
+
+    For example, if this value is set to 'EN', a user using the app in German will see their diagnoses in English.
+
 1. **The app ID of the iOS app**
 
     The unique app bundle identifier of the iOS app.

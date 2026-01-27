@@ -17,7 +17,7 @@ declare -a commands=(
 
     "docker compose exec admin python manage.py initialize_data --listener-token=${LISTENER_TOKEN} --listener-registration-token=${LISTENER_REGISTRATION_TOKEN} --interface-engine-token=${INTERFACE_ENGINE_TOKEN} --opaladmin-backend-legacy-token=${ADMIN_TOKEN} --admin-password=${ADMIN_PASSWORD}"
     # explicitly set a password for the interface-engine user to allow logins on admin-legacy
-    "docker compose exec admin python manage.py shell -c 'user = User.objects.get(username=\"interface-engine\"); user.set_password(${INTERFACE_ENGINE_PASSWORD}); user.save();'"
+    "docker compose exec admin python manage.py shell -c 'user = User.objects.get(username=\"interface-engine\"); user.set_password(\"${INTERFACE_ENGINE_PASSWORD}\"); user.save();'"
 )
 
 # Execute each command

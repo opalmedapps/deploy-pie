@@ -1,8 +1,15 @@
 run_setup:
   # computed value to determine whether to prompt the setup questions
   type: bool
-  default: "{{ performed_copy is not defined or performed_copy is false }}"
+  default: "{{ performed_copy is not defined or not performed_copy }}"
   when: false
+
+# only used for testing via copier-template-tester
+is_test:
+  type: bool
+  default: false
+  when: false
+  secret: true
 
 project_name:
   type: str
@@ -19,6 +26,7 @@ extra_files:
   type: str
   help: Where are the extra files located (absolute path)?
   when: "{{ run_setup }}"
+  # needs to be absolute because the tasks are run in the context of the target directory
   validator: |
     {% if run_setup %}
     {% if extra_files | length < 1 %}Required{% endif %}
@@ -78,14 +86,14 @@ db_host:
   type: str
   help: What's the hostname of the DB server?
   default: |-
-    {%- if db_host_type == "container" -%}
+    {% if db_host_type == "container" -%}
       db
     {%- elif db_host_type == "same_server" -%}
       host.docker.internal
     {%- else -%}
       {#- Force the user to type a host -#}
-
-    {%- endif -%}
+      {{ UNSET }}
+    {%- endif %}
   when: "{{ db_host_type == 'separate_server' }}"
   validator: "{% if db_host | length < 1 %}Required{% endif %}"
 
@@ -93,7 +101,13 @@ db_port:
   type: int
   help: Port the DB server is listening at
   when: "{{ db_host_type != 'container' }}"
-  default: 3306
+  default: |-
+    {% if db_host_type == 'container' -%}
+      3306
+    {%- else -%}
+    {{ UNSET }}
+    {%- endif %}
+  validator: "{% if db_port < 1 %}Invalid input{% endif %}"
 
 db_user:
   type: str
@@ -111,7 +125,12 @@ db_password:
 db_root_user:
   type: str
   help: Username of a database root user (to create user and databases)
-  default: root
+  default: |-
+    {% if db_host_type == 'container' -%}
+      root
+    {%- else -%}
+    {{ UNSET }}
+    {%- endif %}
   when: "{{ db_host_type != 'container'}}"
   validator: "{% if db_root_user | length < 1 %}Required{% endif %}"
 
@@ -124,7 +143,7 @@ db_root_password:
       {{ existing_secret('.env', 'DB_ROOT_PASSWORD') or random_password(32) }}
     {%- else -%}
       {#- Force the user to type a password -#}
-
+      {{ UNSET }}
     {%- endif %}
   validator: "{% if db_root_password | length < 1 %}Required{% endif %}"
   when: "{{ db_host_type != 'container'}}"
@@ -161,6 +180,12 @@ institution_code:
   help: The 2 character unique institution code
   default: o4
   validator: "{% if institution_code | length != 2 %}Must be exactly two characters{% endif %}"
+
+fallback_language:
+  type: str
+  help: What language should be used as a fallback for health data in the app, when the user's chosen language is not available? Provide a two-letter ISO 639-1 code in uppercase.
+  default: EN
+  validator: "{% if fallback_language | length != 2 %}Must be exactly two characters{% endif %}"
 
 app_id:
   type: str
@@ -270,12 +295,14 @@ _tasks:
       exit 1
     when: "{{ not is_port_available(https_port) }}"
   - command: |
-      echo DB port {{ db_port }} on {{ db_host }} is not reachable
+      echo DB port {{ db_port }} on localhost is not reachable
       exit 1
-    when: "{{ db_host_type != 'container' and is_port_available(db_port, db_host) }}"
+    when: "{{ db_host_type == 'same_server' and is_port_available(db_port | int, 'localhost') }}"
   # validation succeeded
   - "echo Copying extra files into project directory..."
+  - mkdir -p config/firebase
   - "{{ _copier_python }} scripts/copy_file.py {{ extra_files }}/firebase-admin-key.json config/firebase/service-account.json --chmod 0644"
+  - mkdir -p certs/
   - command: "{{ _copier_python }} scripts/copy_file.py {{ extra_files }}/db-certs.crt certs/db-certs.crt --chmod 0644"
     when: "{{ use_custom_certs }}"
   - command: "{{ _copier_python }} scripts/copy_file.py {{ extra_files }}/{{ domain }}.crt certs/server.crt --chmod 0644"
@@ -305,6 +332,10 @@ _tasks:
       docker compose up -d db
       echo "Waiting for DB container to be ready..."
     when: "{{ db_host_type == 'container' }}"
+  # force the creation of the network so that the init_db script can find it
+  - command: |
+      docker compose create admin
+    when: "{{ db_host_type != 'container' }}"
   # set up the databases
   - command: |
       echo "Running init_db script to initialize DB..."
@@ -355,3 +386,4 @@ _exclude:
   - "zizmor.yml"
   # - "README.md"
   - extensions
+  - "{% if not is_test %}tests{% endif %}"

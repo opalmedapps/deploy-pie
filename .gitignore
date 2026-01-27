@@ -1,6 +1,8 @@
 tmp/
 generated/
 
+.ctt/
+
 certs/*
 config/firebase/
 config/traefik/certs/
@@ -9,3 +11,5 @@ artifacts/
 compose.override.yaml
 
 __pycache__
+
+.idea
