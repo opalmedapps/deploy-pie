@@ -49,7 +49,7 @@
   "packageRules": [
     // Automerge uv
     {
-      "matchPackageNames": ["/^uv$/"],
+      "matchPackageNames": ["/^astral-sh/uv$/"],
       "automerge": true,
       // Don't use a schedule
       "schedule": [],
