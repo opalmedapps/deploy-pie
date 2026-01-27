@@ -7,6 +7,10 @@
     // set timezone to local one to ensure schedules are run
     // https://docs.renovatebot.com/configuration-options/#timezone
     ":timezone(America/Toronto)",
+    // https://docs.renovatebot.com/presets-schedule/#scheduleweekly
+    "schedule:weekly",
+    // https://docs.renovatebot.com/presets-helpers/#helperspingithubactiondigeststosemver
+    "helpers:pinGitHubActionDigestsToSemver",
     "github>mschoettle/renovate-presets//presets/docker-alpine.json5",
     "github>mschoettle/renovate-presets//presets/pre-commit-hooks.json5",
   ],
@@ -41,5 +45,14 @@
         "# renovate: datasource=(?<datasource>[a-zA-Z0-9-._]+?) depName=(?<depName>[^\\s]+?)\\s+[A-Za-z0-9_]+_VERSION=[\"']?(?<currentValue>.+?)[\"']?\\s"
       ]
     }
+  ],
+  "packageRules": [
+    // Automerge uv
+    {
+      "matchPackageNames": ["/^uv$/"],
+      "automerge": true,
+      // Don't use a schedule
+      "schedule": [],
+    },
   ],
 }
