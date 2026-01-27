@@ -162,7 +162,12 @@ db_use_adminer:
 use_custom_certs:
   type: bool
   help: Do you need to use a custom CA file to verify HTTPS and DB connections?
-  default: false
+  default: |-
+    {% if certificate_type == 'file' or db_use_tls -%}
+      {{ UNSET }}
+    {%- else -%}
+      false
+    {%- endif %}
   when: "{{ certificate_type == 'file' or db_use_tls }}"
 
 use_ofelia:
@@ -257,6 +262,15 @@ _message_after_copy: |
 
 _tasks:
   # validation
+  - "echo Checking that the compose file has no warnings"
+  - command: |
+      if docker compose config --quiet 2>&1 | grep --quiet level=; then
+        echo compose config has errors or warnings
+        docker compose config --quiet 2>&1
+        exit 1
+      else
+          echo compose config has no errors or warnings
+      fi
   - "echo Checking that required files are provided"
   - command: |
       echo Firebase admin key missing at {{ extra_files + '/firebase-admin-key.json' }}
@@ -382,4 +396,5 @@ _exclude:
   - "zizmor.yml"
   # - "README.md"
   - extensions
+  - "{% if not is_test %}scripts/cleanup_db.sh{% endif %}"
   - "{% if not is_test %}tests{% endif %}"

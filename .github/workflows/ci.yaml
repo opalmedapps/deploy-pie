@@ -50,7 +50,6 @@ jobs:
           version: "0.9.26"
       - name: Test template using copier-template-tester
         run: |
-          docker container ps
           uv run --with copier --with copier-templates-extensions --with bcrypt --with copier-template-tester ctt
       - name: Show running containers
         run: |

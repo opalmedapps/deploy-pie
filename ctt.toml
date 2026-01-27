@@ -45,3 +45,22 @@ db_host_type = "same_server"
 db_port = 3307
 db_root_user = "root"
 db_root_password = "root-password"
+_extra_tasks = [
+  # need to clean up on existing DB server
+  "ENVIRONMENT='{{ environment }}' DB_ROOT_USER='{{ db_root_user }}' DB_ROOT_PASSWORD='{{ db_root_password }}' DB_HOST='{{ db_host }}' DB_PORT='{{ db_port }}' DB_USER='{{ db_user }}' DB_NAME=admin ./scripts/cleanup_db.sh",
+  "docker compose down",
+]
+
+# DB on a different server requires a db_host
+[output.".ctt/db_different_server"]
+db_host_type = "separate_server"
+# use the service container to pretend it is a separate server
+# very tricky to test in CI with a dedicated hostname
+db_host = "host.docker.internal"
+db_port = 3307
+db_root_user = "root"
+db_root_password = "root-password"
+# force no TLS during test, requires certificate otherwise
+# TODO: add test case with TLS enabled
+db_use_tls = 0
+use_custom_certs = false
