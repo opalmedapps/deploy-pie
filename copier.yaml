@@ -264,6 +264,7 @@ _tasks:
   # validation
   - "echo Checking that the compose file has no warnings"
   - command: |
+      docker compose config --quiet
       docker compose config --quiet 2>&1 | grep --invert warning
   - "echo Checking that required files are provided"
   - command: |
