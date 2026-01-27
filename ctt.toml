@@ -57,5 +57,5 @@ db_root_user = "root"
 db_root_password = "root-password"
 # force no TLS during test, requires certificate otherwise
 # TODO: add test case with TLS enabled
-db_use_tls = false
+db_use_tls = 0
 use_custom_certs = false
