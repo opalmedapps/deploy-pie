@@ -47,7 +47,7 @@ db_root_user = "root"
 db_root_password = "root-password"
 _extra_tasks = [
   # need to clean up on existing DB server
-  "DB_ROOT_USER='{{ db_root_user }}' DB_ROOT_PASSWORD='{{ db_root_password }}' DB_HOST='{{ db_host }}' DB_PORT='{{ db_port }}' DB_USER='{{ db_user }}' DB_NAME=admin .ctt/scripts/cleanup_db.sh",
+  "DB_ROOT_USER='{{ db_root_user }}' DB_ROOT_PASSWORD='{{ db_root_password }}' DB_HOST='{{ db_host }}' DB_PORT='{{ db_port }}' DB_USER='{{ db_user }}' DB_NAME=admin ./scripts/cleanup_db.sh",
   "docker compose down",
 ]
 

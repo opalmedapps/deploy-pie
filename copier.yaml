@@ -396,5 +396,5 @@ _exclude:
   - "zizmor.yml"
   # - "README.md"
   - extensions
-  - "{% if not is_test %}.ctt{% endif %}"
+  - "{% if not is_test %}scripts/cleanup_db.sh{% endif %}"
   - "{% if not is_test %}tests{% endif %}"
