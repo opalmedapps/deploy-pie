@@ -10,3 +10,4 @@ rules:
         docker/*: ref-pin
         fsfe/reuse-action: ref-pin
         pre-commit/action: ref-pin
+        j178/prek-action: ref-pin

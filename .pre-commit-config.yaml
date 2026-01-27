@@ -5,6 +5,7 @@ repos:
       - id: trailing-whitespace
       - id: end-of-file-fixer
       - id: check-builtin-literals
+      - id: check-added-large-files
       - id: check-case-conflict
       - id: check-executables-have-shebangs
       - id: check-json
@@ -17,6 +18,10 @@ repos:
       - id: check-yaml
       - id: debug-statements
       - id: detect-private-key
+      - id: mixed-line-ending
+  - repo: builtin
+    hooks:
+      - id: check-json5
 
   # https://docs.astral.sh/ruff/integrations/#pre-commit
   - repo: https://github.com/astral-sh/ruff-pre-commit
