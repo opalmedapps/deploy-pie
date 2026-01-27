@@ -58,7 +58,7 @@ http:
 
     {% if use_orms -%}
     orms:
-      rule: 'Host(`{{ env "APP_HOST" }}`) && PathPrefix(`/orms`)'
+      rule: {% raw %}'Host(`{{ env "APP_HOST" }}`) && PathPrefix(`/orms`)'{% endraw %}
       entryPoints:
         - web-secure
       middlewares:
@@ -125,7 +125,7 @@ http:
           - url: http://adminer:8080
     {%- endif %}
 
-    {% if use_orms - %}
+    {% if use_orms -%}
     orms:
       loadBalancer:
         servers:

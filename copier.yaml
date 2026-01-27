@@ -403,8 +403,10 @@ _exclude:
   - "renovate.json5"
   - "ruff.toml"
   - "zizmor.yml"
+  - "LICENSE"
   # - "README.md"
   - extensions
+  - "{% if not db_use_adminer %}compose.adminer.yaml{% endif %}"
   - "{% if not use_orms %}compose.orms.yaml{% endif %}"
   - "{% if not use_ofelia %}compose.ofelia.yaml{% endif %}"
   - "{% if not is_test %}scripts/cleanup_db.sh{% endif %}"
