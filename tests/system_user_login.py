@@ -9,12 +9,14 @@ import requests
 import typer
 
 
-def main(labs_password: str):
+def main(username: str, password: str):
+    print(f'Attempting system user login for user: {username}')
+
     response = requests.post(
         'https://localhost/opalAdmin/user/system-login',
         data={
-            'username': 'interface-engine',
-            'password': labs_password,
+            'username': username,
+            'password': password,
         },
         timeout=5,
         allow_redirects=False,
@@ -26,7 +28,7 @@ def main(labs_password: str):
         print(f'System user login failed: {response.status_code} {response.text}')
         raise typer.Exit(code=1)
 
-    print('System user login succeeded')
+    print(f'System user login succeeded for user: {username}')
 
 
 if __name__ == '__main__':
