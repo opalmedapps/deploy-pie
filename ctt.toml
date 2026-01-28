@@ -71,6 +71,7 @@ _extra_tasks = [
 use_orms = true
 _extra_tasks = [
   "ls compose.orms.yaml",
+  "docker compose exec admin python manage.py shell -c 'print(LegacyOAUser.objects.all())'",
   "uv run tests/system_user_login.py orms {{ orms_password }}",
   "docker compose down",
 ]
