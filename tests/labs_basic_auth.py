@@ -11,7 +11,10 @@ from http import HTTPStatus
 import requests
 import typer
 
+app = typer.Typer()
 
+
+@app.command(context_settings={'ignore_unknown_options': True})
 def main(labs_password: str):
     response = requests.post(
         'https://localhost/opalAdmin/labs/api/processLabForPatient.php',
@@ -38,4 +41,4 @@ def main(labs_password: str):
 
 
 if __name__ == '__main__':
-    typer.run(main)
+    app()

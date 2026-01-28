@@ -8,7 +8,10 @@
 import requests
 import typer
 
+app = typer.Typer()
 
+
+@app.command(context_settings={'ignore_unknown_options': True})
 def main(username: str, password: str):
     print(f'Attempting system user login for user: {username}')
 
@@ -32,4 +35,4 @@ def main(username: str, password: str):
 
 
 if __name__ == '__main__':
-    typer.run(main)
+    app()
