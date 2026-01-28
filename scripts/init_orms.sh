@@ -35,3 +35,6 @@ EOIF
 echo "Successfully granted privileges to DB user"
 echo "Done!"
 EOF
+
+# explicitly set a password for the orms user to allow logins on admin-legacy
+docker compose exec admin python manage.py shell -c 'user = User.objects.get(username="orms"); user.set_password("${ORMS_PASSWORD}"); user.save();'

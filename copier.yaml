@@ -228,6 +228,12 @@ interface_engine_token:
   default: "{% if run_setup %}{{ random_token(20) }}{% endif %}"
   when: false
 
+orms_token:
+  type: str
+  default: "{{ existing_secret('.envs/orms.env', 'NEW_OPAL_ADMIN_TOKEN') or random_token(20) }}"
+  when: false
+
+
 admin_token:
   type: str
   default: "{{ existing_secret('.envs/admin-legacy.env', 'NEW_OPALADMIN_TOKEN') or random_token(20) }}"
@@ -239,6 +245,11 @@ admin_password:
   when: false
 
 labs_password:
+  type: str
+  default: "{% if run_setup %}{{ random_password(20) }}{% endif %}"
+  when: false
+
+orms_password:
   type: str
   default: "{% if run_setup %}{{ random_password(20) }}{% endif %}"
   when: false
@@ -361,7 +372,7 @@ _tasks:
       ENVIRONMENT="{{ environment }}" DB_ROOT_USER="{{ db_root_user }}" DB_ROOT_PASSWORD="{{ db_root_password }}" DB_HOST="{{ db_host }}" DB_PORT="{{ db_port }}" DB_USER="{{ db_user }}" DB_PASSWORD="{{ db_password }}" DB_NAME=admin bash ./scripts/init_db.sh
   - command: |
       echo "Running init_orms script to initialize ORMS DB..."
-      ENVIRONMENT="{{ environment }}" DB_ROOT_USER="{{ db_root_user }}" DB_ROOT_PASSWORD="{{ db_root_password }}" DB_HOST="{{ db_host }}" DB_PORT="{{ db_port }}" DB_USER="{{ db_user }}" DB_PASSWORD="{{ db_password }}" DB_NAME=admin bash ./scripts/init_orms.sh
+      ENVIRONMENT="{{ environment }}" DB_ROOT_USER="{{ db_root_user }}" DB_ROOT_PASSWORD="{{ db_root_password }}" DB_HOST="{{ db_host }}" DB_PORT="{{ db_port }}" DB_USER="{{ db_user }}" DB_PASSWORD="{{ db_password }}" DB_NAME=admin ORMS_PASSWORD={{ orms_password }} bash ./scripts/init_orms.sh
     when: "{{ use_orms }}"
   # run admin
   - docker compose up -d admin
