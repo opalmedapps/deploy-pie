@@ -56,6 +56,17 @@ http:
       tls: {}
     {%- endif %}
 
+    {% if use_orms -%}
+    orms:
+      rule: {% raw %}'Host(`{{ env "APP_HOST" }}`) && PathPrefix(`/orms`)'{% endraw %}
+      entryPoints:
+        - web-secure
+      middlewares:
+        - redirect-missing-slash
+      service: orms
+      tls: {}
+    {%- endif %}
+
   middlewares:
     redirect-root:
       redirectRegex:
@@ -112,4 +123,11 @@ http:
       loadBalancer:
         servers:
           - url: http://adminer:8080
+    {%- endif %}
+
+    {% if use_orms -%}
+    orms:
+      loadBalancer:
+        servers:
+          - url: http://orms:8080
     {%- endif %}

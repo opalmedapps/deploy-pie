@@ -75,7 +75,7 @@ Prepare a directory for these files with the following contents:
 
 - `firebase-admin-key.json`: The private key of the service account used by the [Firebase Admin SDK](https://firebase.google.com/docs/database/admin/start#admin-sdk-authentication)
 - `apn.crt` and `apn.key`: The public and private certificates for the Apple Push Notification service.
-    The private key cannot be password-protected
+    The private key cannot be password-protected.
 
 ### Details
 
@@ -225,6 +225,13 @@ Some questions are conditional based on your answer to a previous question.
     *Ofelia* can be run in a sidecar container to run required jobs periodically.
     It is an alternative to using the cron daemon on the host.
     *Ofelia* sends emails for any failing job.
+
+1. **Do you want to use the room management component (ORMS)?**
+
+    [ORMS](https://github.com/opalmedapps/#:~:text=opal%2Drms) provides a virtual waiting room.
+    Patients can check-in for an appointment via a kiosk.
+    Clinical staff can see checked in patients and call them to a room.
+    The called patients can be displayed on a TV screen.
 
 1. **The Firebase project name**
 
