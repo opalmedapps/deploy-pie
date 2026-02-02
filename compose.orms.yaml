@@ -1,0 +1,49 @@
+services:
+    memcached:
+        image: memcached:1.6.40-alpine3.23
+        environment:
+          - TZ=${TIMEZONE}
+    orms:
+        image: ghcr.io/opalmedapps/opal-rms:main
+        restart: unless-stopped
+        depends_on:
+          - memcached
+          - db
+        env_file:
+          - $PWD/.envs/orms.env
+        environment:
+          - PHP_MEMORY_LIMIT=512M
+          - TZ=${TIMEZONE}
+        volumes:
+          - type: bind
+            source: $PWD/config/firebase/web-config.json
+            target: /config/firebase-config.json
+            read_only: true
+        labels:
+          - "ofelia.enabled=true"
+          - "ofelia.job-exec.vwr-appointments.schedule=@every 3s"
+          - "ofelia.job-exec.vwr-appointments.command=php php/cron/generateVwrAppointments.php"
+          - "ofelia.job-exec.vwr-appointments.no-overlap=true"
+          - "ofelia.job-exec.vwr-appointments.user=www-data"
+          # - "ofelia.job-exec.incoming-sms.schedule=@every 5s"
+          # - "ofelia.job-exec.incoming-sms.command=php php/cron/processIncomingSmsMessages.php"
+          # - "ofelia.job-exec.incoming-sms.no-overlap=true"
+          - "ofelia.job-exec.appointment-reminder.schedule=0 0 18 * * *"
+          - "ofelia.job-exec.appointment-reminder.command=php php/cron/generateAppointmentReminders.php"
+          - "ofelia.job-exec.checkout.schedule=0 30 23 * * *"
+          - "ofelia.job-exec.checkout.command=php php/cron/endOfDayCheckout.php"
+    admin:
+      environment:
+        - ORMS_ENABLED=True
+        - ORMS_HOST=https://${APP_HOST}/orms
+    admin-legacy:
+      environment:
+        - ORMS_ENABLED=1
+        - ORMS_HOST=https://${APP_HOST}/orms
+    listener:
+      environment:
+        - ORMS_ENABLED=1
+        - CHECKIN_ROOM=OPAL PHONE APP
+        # URL notified when a questionnaire is completed
+        - QUESTIONNAIRE_COMPLETED_URL=http://orms:8080/orms/php/api/public/v1/patient/notifyNewQuestionnaireResponse
+        - ORMS_CHECKIN_URL=http://orms:8080/orms/php/api/public/v1/patient/checkInToLocation

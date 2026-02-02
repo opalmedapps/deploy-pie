@@ -175,6 +175,11 @@ use_ofelia:
   help: Do you want to use Ofelia as a job scheduler to run period jobs?
   default: true
 
+use_orms:
+  type: bool
+  help: Do you want to use the room management component (ORMS)?
+  default: false
+
 firebase_project_name:
   type: str
   help: The Firebase project name
@@ -223,6 +228,12 @@ interface_engine_token:
   default: "{% if run_setup %}{{ random_token(20) }}{% endif %}"
   when: false
 
+orms_token:
+  type: str
+  default: "{{ existing_secret('.envs/orms.env', 'NEW_OPAL_ADMIN_TOKEN') or random_token(20) }}"
+  when: false
+
+
 admin_token:
   type: str
   default: "{{ existing_secret('.envs/admin-legacy.env', 'NEW_OPALADMIN_TOKEN') or random_token(20) }}"
@@ -234,6 +245,11 @@ admin_password:
   when: false
 
 labs_password:
+  type: str
+  default: "{% if run_setup %}{{ random_password(20) }}{% endif %}"
+  when: false
+
+orms_password:
   type: str
   default: "{% if run_setup %}{{ random_password(20) }}{% endif %}"
   when: false
@@ -354,11 +370,19 @@ _tasks:
   - command: |
       echo "Running init_db script to initialize DB..."
       ENVIRONMENT="{{ environment }}" DB_ROOT_USER="{{ db_root_user }}" DB_ROOT_PASSWORD="{{ db_root_password }}" DB_HOST="{{ db_host }}" DB_PORT="{{ db_port }}" DB_USER="{{ db_user }}" DB_PASSWORD="{{ db_password }}" DB_NAME=admin bash ./scripts/init_db.sh
+  - command: |
+      echo "Running init_orms script to initialize ORMS DB..."
+      ENVIRONMENT="{{ environment }}" DB_ROOT_USER="{{ db_root_user }}" DB_ROOT_PASSWORD="{{ db_root_password }}" DB_HOST="{{ db_host }}" DB_PORT="{{ db_port }}" DB_USER="{{ db_user }}" DB_PASSWORD="{{ db_password }}" DB_NAME=admin bash ./scripts/init_orms.sh
+    when: "{{ use_orms }}"
   # run admin
   - docker compose up -d admin
   # Migrate schemas and initialize data
   - command: |
-      LISTENER_TOKEN="{{ listener_token }}" LISTENER_REGISTRATION_TOKEN="{{ listener_registration_token }}" INTERFACE_ENGINE_TOKEN="{{ interface_engine_token }}" INTERFACE_ENGINE_PASSWORD="{{ labs_password }}" ADMIN_TOKEN="{{ admin_token }}" ADMIN_PASSWORD={{ admin_password }} ./scripts/initialize.sh
+      LISTENER_TOKEN="{{ listener_token }}" LISTENER_REGISTRATION_TOKEN="{{ listener_registration_token }}" INTERFACE_ENGINE_TOKEN="{{ interface_engine_token }}" INTERFACE_ENGINE_PASSWORD="{{ labs_password }}" ADMIN_TOKEN="{{ admin_token }}" ADMIN_PASSWORD="{{ admin_password }}" ./scripts/initialize.sh
+  # explicitly set a password for the orms user to allow logins on admin-legacy
+  - command: |
+      docker compose exec admin python manage.py shell -c 'user = User.objects.get(username="orms"); user.set_password("{{ orms_password }}"); user.save();'
+    when: "{{ use_orms }}"
   # run the remaining services
   - command: |
       docker compose up -d
@@ -394,7 +418,11 @@ _exclude:
   - "renovate.json5"
   - "ruff.toml"
   - "zizmor.yml"
+  - "LICENSE"
   # - "README.md"
   - extensions
+  - "{% if not db_use_adminer %}compose.adminer.yaml{% endif %}"
+  - "{% if not use_orms %}compose.orms.yaml{% endif %}"
+  - "{% if not use_ofelia %}compose.ofelia.yaml{% endif %}"
   - "{% if not is_test %}scripts/cleanup_db.sh{% endif %}"
   - "{% if not is_test %}tests{% endif %}"
