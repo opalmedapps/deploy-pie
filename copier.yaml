@@ -421,8 +421,8 @@ _exclude:
   - "LICENSE"
   # - "README.md"
   - extensions
-  - "{% if not db_use_adminer %}compose.adminer.yaml{% endif %}"
-  - "{% if not use_orms %}compose.orms.yaml{% endif %}"
+  - "{% if db_use_adminer is not defined or not db_use_adminer %}compose.adminer.yaml{% endif %}"
+  - "{% if use_orms is not defined or not use_orms %}compose.orms.yaml{% endif %}"
   - "{% if not use_ofelia %}compose.ofelia.yaml{% endif %}"
-  - "{% if not is_test %}scripts/cleanup_db.sh{% endif %}"
-  - "{% if not is_test %}tests{% endif %}"
+  - "{% if is_test is not defined or not is_test %}scripts/cleanup_db.sh{% endif %}"
+  - "{% if is_test is not defined or not is_test %}tests{% endif %}"
