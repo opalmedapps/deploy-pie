@@ -419,6 +419,7 @@ _exclude:
   - "ruff.toml"
   - "zizmor.yml"
   - "LICENSE"
+  - "ctt.toml"
   # - "README.md"
   - extensions
   - "{% if db_use_adminer is not defined or not db_use_adminer %}compose.adminer.yaml{% endif %}"
