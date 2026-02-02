@@ -2,7 +2,7 @@
 set -euo pipefail
 
 # renovate: datasource=docker depName=alpine
-ALPINE_VERSION="3.23.2"
+ALPINE_VERSION="3.23.3"
 
 echo "Running container for mysql-client..."
 docker run --rm --interactive \
