@@ -39,7 +39,7 @@ services:
       {% endif -%}
   {%- if db_host_type == "container" %}
   db:
-    image: mariadb:10.11.15-jammy
+    image: mariadb:10.11.16-jammy
     restart: unless-stopped
     environment:
       - MARIADB_ROOT_PASSWORD=${DB_ROOT_PASSWORD}
