@@ -172,7 +172,7 @@ use_custom_certs:
 
 use_ofelia:
   type: bool
-  help: Do you want to use Ofelia as a job scheduler to run period jobs?
+  help: Do you want to use Ofelia as a job scheduler to run jobs periodically?
   default: true
 
 use_orms:
@@ -292,6 +292,10 @@ _tasks:
       echo Firebase admin key missing at {{ extra_files + '/firebase-admin-key.json' }}
       exit 1
     when: "{{ not file_exists(extra_files + '/firebase-admin-key.json') }}"
+  - command: |
+      echo Firebase web config missing at {{ extra_files + '/firebase-web-config.json' }}
+      exit 1
+    when: "{{ not file_exists(extra_files + '/firebase-web-config.json') }}"
   - command: |
       echo Apple Push Notification certificate missing at {{ extra_files + '/apn.crt' }}
       exit 1

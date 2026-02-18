@@ -3,7 +3,7 @@
 [defaults]
 is_test = true
 project_name = "test"
-extra_files = "/home/runner/work/deploy-pie/deploy-pie/.ctt/extra"
+extra_files = "/Users/mschoettle/Documents/Development/oss/opalmedapps/deploy-pie/.ctt/extra"
 certificate_type = "letsencrypt"
 # required for letsencrypt
 admin_email = "test"
@@ -11,66 +11,77 @@ db_host_type = "container"
 firebase_project_name = "test"
 app_id = "com.hig.test"
 domain_registration = "registration.opalmedapps.ca"
-_extra_tasks = [
+_post_tasks = [
   "docker compose down",
 ]
 
-[output.".ctt/defaults"]
-_extra_tasks = [
-  "! ls compose.orms.yaml",
-  "uv run tests/admin_login.py '{{ admin_password }}'",
-  "uv run tests/system_user_login.py interface-engine '{{ labs_password }}'",
-  "uv run tests/labs_basic_auth.py '{{ labs_password }}'",
-  "uv run tests/validate_token.py admin_token {{ admin_token }}",
-  "uv run tests/validate_token.py listener_token {{ listener_token }}",
-  "uv run tests/validate_token.py listener_registration_token {{ listener_registration_token }}",
-  "uv run tests/validate_token.py interface_engine_token {{ interface_engine_token }}",
-  # need to set legacy DBs to test mode so that refresh_data script can run
-  "docker compose run --rm db-management python -m db_management.run_sql_scripts OpalDB db_management/opaldb/data/test/testmode/",
-  "docker compose run --rm db-management python -m db_management.run_sql_scripts QuestionnaireDB db_management/questionnairedb/data/test/testmode/",
-  "scripts/refresh_data.sh OMI",
-  "docker compose down",
-]
+# [output.".ctt/defaults"]
+# _extra_tasks = [
+#   "! ls compose.orms.yaml",
+#   "uv run tests/admin_login.py '{{ admin_password }}'",
+#   "uv run tests/system_user_login.py interface-engine '{{ labs_password }}'",
+#   "uv run tests/labs_basic_auth.py '{{ labs_password }}'",
+#   "uv run tests/validate_token.py admin_token {{ admin_token }}",
+#   "uv run tests/validate_token.py listener_token {{ listener_token }}",
+#   "uv run tests/validate_token.py listener_registration_token {{ listener_registration_token }}",
+#   "uv run tests/validate_token.py interface_engine_token {{ interface_engine_token }}",
+#   # need to set legacy DBs to test mode so that refresh_data script can run
+#   "docker compose run --rm db-management python -m db_management.run_sql_scripts OpalDB db_management/opaldb/data/test/testmode/",
+#   "docker compose run --rm db-management python -m db_management.run_sql_scripts QuestionnaireDB db_management/questionnairedb/data/test/testmode/",
+#   "scripts/refresh_data.sh OMI",
+#   # ensure that the refresh script can be run again (test mode remains enabled)
+#   "scripts/refresh_data.sh OMI",
+#   "docker compose down",
+# ]
 
 # the tests are excluded
 [output.".ctt/no_test"]
 is_test = false
-_extra_tasks = [
+_skip_tasks = true
+_pre_tasks = [
   "! ls tests",
-  "docker compose down",
 ]
 
-# DB on same host
-[output.".ctt/db_same_host"]
-db_host_type = "same_server"
-db_port = 3307
-db_root_user = "root"
-db_root_password = "root-password"
-_extra_tasks = [
-  # need to clean up on existing DB server
-  "ENVIRONMENT='{{ environment }}' DB_ROOT_USER='{{ db_root_user }}' DB_ROOT_PASSWORD='{{ db_root_password }}' DB_HOST='{{ db_host }}' DB_PORT='{{ db_port }}' DB_USER='{{ db_user }}' DB_NAME=admin ./scripts/cleanup_db.sh",
-  "docker compose down",
-]
+# # DB on same host
+# [output.".ctt/db_same_host"]
+# db_host_type = "same_server"
+# db_port = 3307
+# db_root_user = "root"
+# db_root_password = "root-password"
+# _extra_tasks = [
+#   # need to clean up on existing DB server
+#   "ENVIRONMENT='{{ environment }}' DB_ROOT_USER='{{ db_root_user }}' DB_ROOT_PASSWORD='{{ db_root_password }}' DB_HOST='{{ db_host }}' DB_PORT='{{ db_port }}' DB_USER='{{ db_user }}' DB_NAME=admin ./scripts/cleanup_db.sh",
+#   "docker compose down",
+# ]
 
-# DB on a different server requires a db_host
-[output.".ctt/db_different_server"]
-db_host_type = "separate_server"
-# use the service container to pretend it is a separate server
-# very tricky to test in CI with a dedicated hostname
-db_host = "host.docker.internal"
-db_port = 3307
-db_root_user = "root"
-db_root_password = "root-password"
-# force no TLS during test, requires certificate otherwise
-# TODO: add test case with TLS enabled
-db_use_tls = 0
-use_custom_certs = false
+# # DB on a different server requires a db_host
+# [output.".ctt/db_different_server"]
+# db_host_type = "separate_server"
+# # use the service container to pretend it is a separate server
+# # very tricky to test in CI with a dedicated hostname
+# db_host = "host.docker.internal"
+# db_port = 3307
+# db_root_user = "root"
+# db_root_password = "root-password"
+# # force no TLS during test, requires certificate otherwise
+# # TODO: add test case with TLS enabled
+# db_use_tls = 0
+# use_custom_certs = false
 
-# orms enabled
-[output.".ctt/orms_enabled"]
-use_orms = true
-_extra_tasks = [
-  "ls compose.orms.yaml",
-  "uv run tests/system_user_login.py orms {{ orms_password }}",
-  "docker compose down",
-]
+# # orms enabled
+# [output.".ctt/orms_enabled"]
+# use_orms = true
+# _extra_tasks = [
+#   "ls compose.orms.yaml",
+#   "uv run tests/system_user_login.py orms {{ orms_password }}",
+#   # need to set legacy DBs to test mode so that refresh_data script can run
+#   "docker compose run --rm db-management python -m db_management.run_sql_scripts OpalDB db_management/opaldb/data/test/testmode/",
+#   "docker compose run --rm db-management python -m db_management.run_sql_scripts QuestionnaireDB db_management/questionnairedb/data/test/testmode/",
+#   "docker compose run --rm db-management python -m db_management.run_sql_scripts OrmsDatabase db_management/ormsdb/data/test/testmode/",
+#   "scripts/refresh_data.sh OMI",
+#   "scripts/refresh_data_orms.sh OMI",
+#   # ensure that the refresh scripts can be run again (test mode remains enabled)
+#   "scripts/refresh_data.sh OMI",
+#   "scripts/refresh_data_orms.sh OMI",
+#   "docker compose down",
+# ]
