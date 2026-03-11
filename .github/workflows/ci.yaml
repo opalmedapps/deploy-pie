@@ -42,7 +42,7 @@ jobs:
           version: "0.10.9"
       - name: Test template using copier-template-tester
         run: |
-          uv run --with copier --with copier-templates-extensions --with bcrypt --with copier-template-tester ctt
+          uv run --with copier --with copier-templates-extensions --with bcrypt --with copier-template-tester==2.3.0rc0 ctt
       - name: Show running containers
         run: |
           docker ps
