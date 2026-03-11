@@ -75,6 +75,7 @@ use_custom_certs = false
 use_orms = true
 _pre_tasks = [
   "ls compose.orms.yaml",
+  "cat scripts/initialize.sh",
 ]
 _post_tasks = [
   "uv run tests/system_user_login.py orms {{ orms_password }}",
