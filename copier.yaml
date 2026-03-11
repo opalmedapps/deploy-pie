@@ -295,7 +295,7 @@ _tasks:
   - command: |
       echo Firebase web config missing at {{ extra_files + '/firebase-web-config.json' }}
       exit 1
-    when: "{{ not file_exists(extra_files + '/firebase-web-config.json') }}"
+    when: "{{ use_orms and not file_exists(extra_files + '/firebase-web-config.json') }}"
   - command: |
       echo Apple Push Notification certificate missing at {{ extra_files + '/apn.crt' }}
       exit 1
