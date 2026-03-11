@@ -1,6 +1,6 @@
 services:
     memcached:
-        image: memcached:1.6.40-alpine3.23
+        image: memcached:1.6.41-alpine3.23
         environment:
           - TZ=${TIMEZONE}
     orms:
