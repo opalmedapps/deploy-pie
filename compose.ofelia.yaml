@@ -66,7 +66,8 @@ services:
       - "ofelia.job-exec.expire-relationships.schedule=0 1 0 * * *"
       - "ofelia.job-exec.expire-relationships.command=python manage.py expire_relationships"
       # Delete expired IPS bundles every 5 minutes
-      - "ofelia.job-exec.expire-ips-bundles.schedule=*/5 * * * *"
+      - "ofelia.job-exec.expire-ips-bundles.schedule=@every 5m"
+      - "ofelia.job-exec.expire-ips-bundles.no-overlap=true"
       - "ofelia.job-exec.expire-ips-bundles.command=python manage.py expire_ips_bundles"
       # Update application usage statics daily at 5am
       - "ofelia.job-exec.usage-statistics.schedule=0 0 5 * * *"
