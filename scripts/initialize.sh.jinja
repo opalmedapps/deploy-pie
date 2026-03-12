@@ -10,6 +10,11 @@ declare -a commands=(
     "docker compose run --rm db-management alembic --name questionnairedb upgrade head"
     "docker compose run --rm db-management alembic --name opaldb upgrade head"
 
+    {% if use_orms %}
+    "docker compose run --rm db-management alembic --name ormsdb upgrade head"
+    "docker compose run --rm db-management alembic --name ormslogdb upgrade head"
+    {% endif %}
+
     "docker compose exec admin python manage.py migrate"
 
     "docker compose run --rm db-management python -m db_management.run_sql_scripts OpalDB db_management/opaldb/data/initial/"

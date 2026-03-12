@@ -220,7 +220,7 @@ Some questions are conditional based on your answer to a previous question.
     For HTTPS connections the `ca-certificates.crt` file is used.
     For DB connections, the `db-certs.crt` file is used.
 
-1. **Do you want to use Ofelia as a job scheduler to run period jobs?**
+1. **Do you want to use Ofelia as a job scheduler to run jobs periodically?**
 
     *Ofelia* can be run in a sidecar container to run required jobs periodically.
     It is an alternative to using the cron daemon on the host.
@@ -277,6 +277,33 @@ Run the following command from within the project directory:
 ```shell
 uvx --python ">=3.12" --with copier-templates-extensions --with bcrypt \
     copier update --trust --skip-tasks --skip-answered
+```
+
+### Enabling the room management system (ORMS) after setting up the project
+
+If ORMS is enabled after project creation, the tasks to initialize ORMS are not run.
+You need to run them manually.
+
+First, update all containers:
+
+```shell
+docker compose up -d
+```
+
+Then run the following commands:
+
+```shell
+./scripts/init_orms.sh
+docker compose exec admin python manage.py shell -c "from opal.core.management.commands import initialize_data; command = initialize_data.Command(); command._create_orms_data(orms_token=None);"
+docker compose exec admin python manage.py shell -c "import secrets; password = secrets.token_urlsafe(20); print(f'ORMS password: {password}'); user = User.objects.get(username='orms'); user.set_password(password); user.save();"
+```
+
+Add the token and password to the environment variables `NEW_OPAL_ADMIN_TOKEN` and `LEGACY_OPAL_ADMIN_API_PASSWORD` in `.envs/orms.env`.
+
+Recreate the `orms` container:
+
+```shell
+docker compose up -d orms
 ```
 
 ## Testing

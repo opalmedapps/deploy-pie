@@ -30,14 +30,11 @@ echo "Upgrading OrmsLog..."
 docker compose run --rm db-management alembic --name ormslogdb upgrade head
 
 docker compose run --rm db-management python -m db_management.run_sql_scripts OrmsDatabase db_management/ormsdb/data/truncate/
-docker compose run --rm db-management python -m db_management.run_sql_scripts OrmsLog db_management/ormslogdb/data/truncate/
 
 docker compose run --rm db-management python -m db_management.run_sql_scripts OrmsDatabase db_management/ormsdb/data/initial/
 docker compose run --rm db-management python -m db_management.run_sql_scripts OrmsDatabase db_management/ormsdb/data/test/
 docker compose run --rm db-management python -m db_management.run_sql_scripts OrmsDatabase db_management/ormsdb/data/test/$institution_lower/
-docker compose run --rm db-management python -m db_management.run_sql_scripts OrmsLog db_management/ormslogdb/data/initial/
-docker compose run --rm db-management python -m db_management.run_sql_scripts OrmsLog db_management/ormslogdb/data/test/
-docker compose run --rm db-management python -m db_management.run_sql_scripts OrmsLog db_management/ormslogdb/data/test/$institution_lower/
+docker compose run --rm db-management python -m db_management.run_sql_scripts OrmsDatabase db_management/ormsdb/data/test/testmode/
 
 docker compose exec admin python manage.py update_orms_patients
 

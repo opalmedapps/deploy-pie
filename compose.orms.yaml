@@ -35,7 +35,7 @@ services:
     admin:
       environment:
         - ORMS_ENABLED=True
-        - ORMS_HOST=https://${APP_HOST}/orms
+        - ORMS_HOST=http://orms:8080/orms
     admin-legacy:
       environment:
         - ORMS_ENABLED=1
