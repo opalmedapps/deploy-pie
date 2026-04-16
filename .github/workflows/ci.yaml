@@ -39,7 +39,7 @@ jobs:
         id: setup-uv
         with:
           # renovate: datasource=pypi dependency=uv
-          version: "0.11.4"
+          version: "0.11.7"
       - name: Test template using copier-template-tester
         run: |
           uv run --with copier --with copier-templates-extensions --with bcrypt --prerelease=allow --with copier-template-tester==2.3.0rc0 ctt
