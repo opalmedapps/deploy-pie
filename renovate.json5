@@ -1,29 +1,11 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
-    "config:recommended",
-    // https://docs.renovatebot.com/presets-default/#separatemultiplemajorreleases
-    ":separateMultipleMajorReleases",
-    // set timezone to local one to ensure schedules are run
-    // https://docs.renovatebot.com/configuration-options/#timezone
-    ":timezone(America/Toronto)",
-    // https://docs.renovatebot.com/presets-schedule/#scheduleweekly
-    "schedule:weekly",
-    // https://docs.renovatebot.com/presets-helpers/#helperspingithubactiondigeststosemver
-    "helpers:pinGitHubActionDigestsToSemver",
-    "github>mschoettle/renovate-presets//presets/docker-alpine.json5",
-    "github>mschoettle/renovate-presets//presets/pre-commit-hooks.json5",
+    // https://github.com/opalmedapps/.github/blob/main/base.renovate.json5
+    "github>opalmedapps/.github//base.renovate.json5",
   ],
   // https://docs.renovatebot.com/configuration-options/#assignees
-  "assignees": ["mschoettle"],
-  // https://docs.renovatebot.com/configuration-options/#labels
-  "labels": ["dependencies"],
-  // Only rebase existing MRs when the branch is conflicted
-  // This avoids getting spammed by updates to existing MRs
-  // We need to rebase branches to fast-forward merge anyway
-  //
-  // https://docs.renovatebot.com/configuration-options/#rebasewhen
-  "rebaseWhen": "conflicted",
+  "assignees": [],
   // Also get updates for images in jinja templates
   "docker-compose": {
     "managerFilePatterns": [
@@ -45,14 +27,5 @@
         "# renovate: datasource=(?<datasource>[a-zA-Z0-9-._]+?) depName=(?<depName>[^\\s]+?)\\s+[A-Za-z0-9_]+_VERSION=[\"']?(?<currentValue>.+?)[\"']?\\s"
       ]
     }
-  ],
-  "packageRules": [
-    // Automerge uv
-    {
-      "matchPackageNames": ["/^astral-sh/uv$/"],
-      "automerge": true,
-      // Don't use a schedule
-      "schedule": [],
-    },
   ],
 }
